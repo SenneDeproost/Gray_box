@@ -1,4 +1,6 @@
 import os, sys, time
+from utils import log
+import utils
 
 ARGS = sys.argv[1:]
 if len(ARGS) == 0:
@@ -24,6 +26,11 @@ n_profiles = len([i for i in os.scandir("./models/") if os.path.isdir(i)])
 if not(COMMAND):
     COMMAND = 'info'
 
+# - INFO - #
+elif COMMAND == 'info':
+    with open('.info') as f:
+        print(f.read())
+
 # - TEST - #
 if COMMAND == 'test':
     print('Test received! You typed in the CLI:')
@@ -41,12 +48,11 @@ if COMMAND == 'create':
         os.makedirs(path)
     else:
         raise FileExistsError('Chosen profile ID is already made.')
-    log = open(path + '/log', '+w')
-    info = open(path + '/info', '+w')
-    log.close()
-    info.close()
+    log_file = open(path + '/log', '+w')
+    info_file = open(path + '/info', '+w')
+    log_file.close()
+    info_file.close()
+    utils.LOGFILE = path + '/log'
+    log('Profile created')
 
-# - INFO - #
-elif COMMAND == 'info':
-    with open('.info') as f:
-        print(f.read())
+
