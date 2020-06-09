@@ -1,0 +1,20 @@
+* ----------------------------------------------------- *
+*                    Gray Box v0.01                     *
+*       by Senne Deproost, senne.deproost@vub.be        *
+* ----------------------------------------------------- *
+
+Gray Explainable Artificial Intelligence Toolbox.
+
+COMMANDS:
+
+* help     - Display help and commands.
+* info     - Display information about the program.
+* create   - Set up a new profile directory for a model.
+* play     - Play a loaded model policy.
+* train    - Train a policy model.
+* distill  - Distillate one model into another.
+* explain  - Show GUI and explain policy behaviour.
+
+
+PROGRAM MADE AT VRIJE UNIVERSITEIT BRUSSEL AI LAB, WITH
+HUGE AMOUNTS OF CAFFEINE.
