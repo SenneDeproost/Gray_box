@@ -4,6 +4,7 @@ import sys
 
 import utils
 from utils import log
+import distillation as dis
 
 global COMMAND
 
@@ -75,6 +76,26 @@ def commandParser(COMMAND):
         path = 'profiles/' + ARGS[1]
         shutil.rmtree(path)
         print("Profile " + ARGS[1] + " deleted.")
+
+
+    # - DISTILL - #
+    elif COMMAND == 'distill':
+        if len(ARGS) < 4:
+            raise ValueError('Missing arguments for distill.')
+        profile_id = ARGS[1]
+        model_from = ARGS[2]
+        model_to = ARGS[3]
+        model_env = ARGS[4]
+        try:
+            n_data = ARGS[5]
+        except:
+            n_data = 1000
+        dis.distillation(model_from, model_to, model_env, profile_id, n_data)
+
+
+
+
+
 
 
     # - INVALID COMMAND - #
