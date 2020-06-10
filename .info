@@ -14,6 +14,8 @@ COMMANDS:
 * train    - Train a policy model.
 * distill  - Distillate one model into another.
 * explain  - Show GUI and explain policy behaviour.
+* generate - Generate dataset from a given policy.
+* delete   - Delete a profile.
 
 
 PROGRAM MADE AT VRIJE UNIVERSITEIT BRUSSEL AI LAB, WITH
