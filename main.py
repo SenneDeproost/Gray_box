@@ -6,6 +6,12 @@ import utils
 from utils import log
 import distillation as dis
 
+### --- PREPARATON --- ###
+
+global PROFILE
+with open('.profile') as f:
+    PROFILE = f.read()
+
 global COMMAND
 
 ARGS = sys.argv[1:]
@@ -18,42 +24,53 @@ if len(ARGS) > 1:
 else:
     PARAMS = []
 
-### --- PREPARATON --- ###
 if not os.path.exists('profiles'):
     os.makedirs('profiles')
 
-n_profiles = len([i for i in os.scandir("./profiles/") if os.path.isdir(i)])
+PROFILES = [i.name for i in os.scandir("./profiles/") if os.path.isdir(i)]
+n_profiles = len(PROFILES)
+
+# Program execution without command.
+if not COMMAND or len(PARAMS) == 0:
+    COMMAND = 'info'
+
+# Use the currently set profile when none is given.
+elif not(PARAMS[0] in PROFILES) and not(COMMAND.startswith('profile-')):
+    PARAMS.insert(0, PROFILE)
+
+
 
 
 ### --- COMMAND PARSING --- ###
 
-def commandParser(COMMAND):
+def commandParser(command, params):
     # - NO COMMAND - #
     # No command given. Just go to 'info'.
-    if not (COMMAND) or len(ARGS) < 2:
-        COMMAND = 'info'
+    if not (command) or len(params) < 1:
+        command = 'info'
+
 
     # - INFO - #
     # Display banner and information.
-    if COMMAND == 'info':
+    if command in ('info', 'help'):
         with open('.info') as f:
             print(f.read())
 
 
     # - TEST - #
     # Test the CLI with an echo of the input.
-    elif COMMAND == 'test':
+    elif command == 'test':
         print('Test received! You typed in the CLI:')
-        print(PARAMS)
+        print(params)
 
 
     # - CREATE - #
     # Create new profile.
-    elif COMMAND == 'create':
-        if len(PARAMS) == 0:
+    elif command == 'profile-create':
+        if len(params) == 0:
             profile_id = str(n_profiles + 1)
         else:
-            profile_id = PARAMS[0]
+            profile_id = params[0]
         print('Creating profile with ID: ' + profile_id)
         path = 'profiles/' + profile_id
         if not os.path.exists(path):
@@ -67,31 +84,43 @@ def commandParser(COMMAND):
         utils.LOGFILE = path + '/log'
         os.makedirs(path + '/models/')
         os.makedirs(path + '/datasets/')
-        log('Profile created.')
+        log('Profile ' + profile_id + ' created.')
 
 
     # - DELETE - #
     # Delete a profile.
-    elif COMMAND == 'delete':
-        path = 'profiles/' + ARGS[1]
+    elif command == 'profile-delete':
+        profile_id = params[0]
+        path = 'profiles/' + profile_id
         shutil.rmtree(path)
-        print("Profile " + ARGS[1] + " deleted.")
+        print("Profile " + profile_id + " deleted.")
 
+    # - PROFILE-SET - #
+    # Set the profile variable.
+    #elif
 
     # - DISTILL - #
-    elif COMMAND == 'distill':
-        if len(ARGS) < 4:
+    elif command == 'distill':
+        if len(ARGS) < 3:
             raise ValueError('Missing arguments for distill.')
-        profile_id = ARGS[1]
-        model_from = ARGS[2]
-        model_to = ARGS[3]
-        model_env = ARGS[4]
+        profile_id = params[0]
+        model_from = params[1]
+        model_to = params[2]
+        model_env = params[3]
         try:
-            n_data = ARGS[5]
+            n_data = params[4]
         except:
             n_data = 1000
+        profile_path = 'profiles/' + profile_id
+        utils.LOGFILE = profile_path + '/log'
         dis.distillation(model_from, model_to, model_env, profile_id, n_data)
 
+
+    # - TRAIN - #
+    elif command == 'train':
+        profile_id = params[0]
+        env = params[1]
+        alg = params[2]
 
 
 
@@ -103,4 +132,4 @@ def commandParser(COMMAND):
     else:
         raise NotImplementedError('Command ' + COMMAND + ' not available.')
 
-commandParser(COMMAND)
+commandParser(COMMAND, PARAMS)
