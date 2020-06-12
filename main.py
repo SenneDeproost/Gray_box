@@ -44,11 +44,11 @@ elif not(PARAMS[0] in PROFILES) and not(COMMAND.startswith('profile-')):
 ### --- COMMAND PARSING --- ###
 
 def commandParser(command, params):
+
     # - NO COMMAND - #
     # No command given. Just go to 'info'.
     if not (command) or len(params) < 1:
         command = 'info'
-
 
     # - INFO - #
     # Display banner and information.
@@ -56,13 +56,11 @@ def commandParser(command, params):
         with open('.info') as f:
             print(f.read())
 
-
     # - TEST - #
     # Test the CLI with an echo of the input.
     elif command == 'test':
         print('Test received! You typed in the CLI:')
         print(params)
-
 
     # - CREATE - #
     # Create new profile.
@@ -86,7 +84,6 @@ def commandParser(command, params):
         os.makedirs(path + '/datasets/')
         log('Profile ' + profile_id + ' created.')
 
-
     # - DELETE - #
     # Delete a profile.
     elif command == 'profile-delete':
@@ -97,11 +94,15 @@ def commandParser(command, params):
 
     # - PROFILE-SET - #
     # Set the profile variable.
-    #elif
+    elif command == 'profile-set':
+        new_profile_id = params[0]
+        with open('.profile', '+w') as f:
+            f.write(new_profile_id)
+            f.close()
 
     # - DISTILL - #
     elif command == 'distill':
-        if len(ARGS) < 3:
+        if len(params) < 3:
             raise ValueError('Missing arguments for distill.')
         profile_id = params[0]
         model_from = params[1]
@@ -115,12 +116,13 @@ def commandParser(command, params):
         utils.LOGFILE = profile_path + '/log'
         dis.distillation(model_from, model_to, model_env, profile_id, n_data)
 
-
     # - TRAIN - #
     elif command == 'train':
         profile_id = params[0]
         env = params[1]
         alg = params[2]
+
+    
 
 
 
@@ -130,6 +132,6 @@ def commandParser(command, params):
     # - INVALID COMMAND - #
     # Command is not defined.
     else:
-        raise NotImplementedError('Command ' + COMMAND + ' not available.')
+        raise NotImplementedError('Command ' + command + ' not available.')
 
 commandParser(COMMAND, PARAMS)
