@@ -5,6 +5,7 @@ import sys
 import utils
 from utils import log
 import distillation as dis
+import run
 
 ### --- PREPARATON --- ###
 
@@ -27,8 +28,7 @@ else:
 if not os.path.exists('profiles'):
     os.makedirs('profiles')
 
-PROFILES = [i.name for i in os.scandir("./profiles/") if os.path.isdir(i)]
-n_profiles = len(PROFILES)
+PROFILES = [i.name for i in os.scandir("profiles/") if os.path.isdir(i)]
 
 # Program execution without command.
 if not COMMAND or len(PARAMS) == 0:
@@ -38,16 +38,20 @@ if not COMMAND or len(PARAMS) == 0:
 elif not(PARAMS[0] in PROFILES) and not(COMMAND.startswith('profile-')):
     PARAMS.insert(0, PROFILE)
 
-
-
-
 ### --- COMMAND PARSING --- ###
 
 def commandParser(command, params):
 
+    # The log variable for profile and count number of params.
+    if len(params) > 0:
+        profile = params[0]
+        profile_path = 'profiles/' + profile
+        utils.LOGFILE = profile_path + '/log'
+    n_params = len(params)
+
     # - NO COMMAND - #
     # No command given. Just go to 'info'.
-    if not (command) or len(params) < 1:
+    if not (command) or n_params < 1:
         command = 'info'
 
     # - INFO - #
@@ -65,32 +69,29 @@ def commandParser(command, params):
     # - CREATE - #
     # Create new profile.
     elif command == 'profile-create':
-        if len(params) == 0:
-            profile_id = str(n_profiles + 1)
+        if n_params == 1:
+            profile = params[0]
         else:
-            profile_id = params[0]
-        print('Creating profile with ID: ' + profile_id)
-        path = 'profiles/' + profile_id
+            raise ValueError('Incorrect amount of parameters given for {} command.'.format(command))
+        print('Creating profile with ID: ' + profile)
+        path = 'profiles/' + profile
         if not os.path.exists(path):
             os.makedirs(path)
         else:
             raise FileExistsError('Chosen profile ID is already made.')
         log_file = open(path + '/log', '+w')
-        info_file = open(path + '/info', '+w')
         log_file.close()
-        info_file.close()
         utils.LOGFILE = path + '/log'
         os.makedirs(path + '/models/')
         os.makedirs(path + '/datasets/')
-        log('Profile ' + profile_id + ' created.')
+        utils.init_info(profile)
+        log('Profile ' + profile + ' created.')
 
     # - DELETE - #
     # Delete a profile.
     elif command == 'profile-delete':
-        profile_id = params[0]
-        path = 'profiles/' + profile_id
-        shutil.rmtree(path)
-        print("Profile " + profile_id + " deleted.")
+        shutil.rmtree(profile_path)
+        print("Profile " + profile_path + " deleted.")
 
     # - PROFILE-SET - #
     # Set the profile variable.
@@ -99,30 +100,44 @@ def commandParser(command, params):
         with open('.profile', '+w') as f:
             f.write(new_profile_id)
             f.close()
+        print('Profile set to {}.'.format(new_profile_id))
 
-    # - DISTILL - #
+    # - DISTILL - # /// Todo: implementing distill + change params position
     elif command == 'distill':
         if len(params) < 3:
             raise ValueError('Missing arguments for distill.')
-        profile_id = params[0]
         model_from = params[1]
         model_to = params[2]
         model_env = params[3]
-        try:
+        if len(params) == 4:
             n_data = params[4]
-        except:
-            n_data = 1000
-        profile_path = 'profiles/' + profile_id
-        utils.LOGFILE = profile_path + '/log'
-        dis.distillation(model_from, model_to, model_env, profile_id, n_data)
+            dis.distillation(model_from, model_to, model_env, profile, n_data)
+        else:
+            dis.distillation(model_from, model_to, model_env, profile)
 
-    # - TRAIN - #
-    elif command == 'train':
-        profile_id = params[0]
+    # - PLAY - # /// Todo: implementing Play
+    elif command == 'play':
+        # Play wihtout save or load
         env = params[1]
         alg = params[2]
+        model = params[3]
+        episodes = params[4]
 
-    
+    # - TRAIN - # /// Todo: implementing Train
+    elif command == 'train':
+        if n_params == 4:
+            profile, env, alg, eps = params
+            res = run.train_new(profile, env, alg, eps)
+            return res
+        elif n_params == 5:
+            profile, env, alg, eps, model = params
+           # res = run.train_loaded(env, alg, eps, model)
+        else:
+            raise ValueError('Incorrect amount of parameters given for {} command.'.format(command))
+
+
+
+
 
 
 
