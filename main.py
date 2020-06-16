@@ -126,8 +126,8 @@ def commandParser(command, params):
     # - TRAIN - # /// Todo: implementing Train
     elif command == 'train':
         if n_params == 4:
-            profile, env, alg, eps = params
-            res = run.train_new(profile, env, alg, eps)
+            profile, env, alg, stps = params
+            res = run.train_new(profile, env, alg, int(stps))
             return res
         elif n_params == 5:
             profile, env, alg, eps, model = params

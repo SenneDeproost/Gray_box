@@ -1,5 +1,6 @@
 import arrow
 import json
+import time
 
 
 LOGFILE = None
@@ -8,10 +9,9 @@ LOGFILE = None
 def log(text):
     print(text)
     timestamp = arrow.get().format('DD-MMM-YYYY HH:mm:ss')
-
     if LOGFILE:
         with open(LOGFILE, 'a') as f:
-            f.write(timestamp + ' - ' + text)
+            f.write(timestamp + ' - ' + text.replace('\n',''))
             f.write("\n")
     else:
         raise FileNotFoundError('LOGFILE variable not assigned.')
@@ -32,6 +32,12 @@ def save_info(profile, data):
     with open(path, '+w') as f:
         json.dump(data, f)
         f.close()
+
+
+# Generate new model name.
+def new_model_name(profile):
+    name = str(len(load_info(profile)))
+    return name
 
 
 # Get model with model name.
@@ -66,7 +72,7 @@ def link_dataset(profile, model, dataset):
     data = f[i]
     data['dataset'] = dataset
     f[i] = data
-    save_info(profile, data)
+    save_info(profile, f)
 
 
 # Link environment to model.
@@ -76,7 +82,7 @@ def link_env(profile, model, env):
     data = f[i]
     data['environment'] = env
     f[i] = data
-    save_info(profile, data)
+    save_info(profile, f)
 
 
 # Link algorithm to model.
@@ -86,4 +92,4 @@ def link_algorithm(profile, model, alg):
     data = f[i]
     data['algorithm'] = alg
     f[i] = data
-    save_info(profile, data)
+    save_info(profile, f)
