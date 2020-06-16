@@ -123,15 +123,15 @@ def commandParser(command, params):
         model = params[3]
         episodes = params[4]
 
-    # - TRAIN - # /// Todo: implementing Train
+    # - TRAIN - #
     elif command == 'train':
         if n_params == 4:
             profile, env, alg, stps = params
             res = run.train_new(profile, env, alg, int(stps))
             return res
         elif n_params == 5:
-            profile, env, alg, eps, model = params
-           # res = run.train_loaded(env, alg, eps, model)
+            profile, env, alg, stps, model = params
+            res = run.train_loaded(profile, env, alg, int(stps), model)
         else:
             raise ValueError('Incorrect amount of parameters given for {} command.'.format(command))
 
