@@ -1,5 +1,1 @@
-<<<<<<< HEAD
 senne
-=======
-test
->>>>>>> master
