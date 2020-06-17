@@ -5,13 +5,22 @@ import gym
 from importlib import import_module
 
 
-def play(env, algorithm, episodes):
+def play(profile, env, alg, model_name):
+    # Preperation
+    model = []
+    alg = alg.upper()
+    impo = 'from stable_baselines3 import {}'.format(alg)
+    log('Loading learning algorithm.')
+    exec(impo)
+    log('Algorithm {} loaded.'.format(alg))
+    model_path = 'profiles/{}/models/{}'.format(profile, model_name)
+    ex = 'model.append({}.load(model_path, env=env, verbose=1))'.format(alg)
     env = gym.make(env)
-    import_module(algorithm) # ToDo Change import
-    model_class = eval(algorithm)
-    model = model_class('MlpPolicy', env, verbose=1)
-    model.learn(total_timesteps=episodes)
+    exec(ex, locals())
+    log('Model loaded.')
+    model = model[0]
 
+    # Play until the end
     obs = env.reset()
     for i in range(1000):
         action, _states = model.predict(obs, deterministic=True)
@@ -19,7 +28,6 @@ def play(env, algorithm, episodes):
         env.render()
         if done:
             obs = env.reset()
-
     env.close()
 
 
@@ -27,7 +35,7 @@ def play(env, algorithm, episodes):
 def train_new(profile, env, alg, stps, policy_type='"MlpPolicy"'):
     # Preperation
     model = []
-    log('Training new model with variables: \n environment: {}\n algorithm: {}\n steps: {} \n policy type: {}'.format(env, alg, stps, policy_type))
+    log('Training new model with variables: \n  environment: {}\n  algorithm: {}\n  steps: {} \n  policy type: {}'.format(env, alg, stps, policy_type))
     alg = alg.upper()
     impo = 'from stable_baselines3 import {}'.format(alg)
     log('Loading learning algorithm.')
@@ -76,9 +84,9 @@ def train_loaded(profile, env, alg, stps, model_name, policy_type='"MlpPolicy"')
 
     # Save model.
     model_name = utils.new_model_name(profile)
-    utils.link_model(profile, model_name)
-    utils.link_env(profile, model_name, env)
-    utils.link_algorithm(profile, model_name, alg)
+    #utils.link_model(profile, model_name)
+    #utils.link_env(profile, model_name, env)
+    #utils.link_algorithm(profile, model_name, alg)
     log('Saving model to {}'.format(model_name))
     model.savemodel_(model_path)
     log('Model saved.')

@@ -118,10 +118,8 @@ def commandParser(command, params):
     # - PLAY - # /// Todo: implementing Play
     elif command == 'play':
         # Play wihtout save or load
-        env = params[1]
-        alg = params[2]
-        model = params[3]
-        episodes = params[4]
+        profile, env, alg, model = params
+        run.play(profile, env, alg, model)
 
     # - TRAIN - #
     elif command == 'train':
