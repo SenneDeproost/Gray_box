@@ -203,3 +203,5 @@ fabric.properties
 
 profiles/
 ./.profile
+
+*.DS_Store
