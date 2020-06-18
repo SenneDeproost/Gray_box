@@ -28,7 +28,7 @@ def play(profile, env, alg, model_name):
         obs, reward, done, info = env.step(action)
         env.render()
         if done:
-            obs = env.reset()
+            env.close()
             break
     log('Closing environment.')
     env.close()

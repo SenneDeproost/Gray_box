@@ -1,6 +1,7 @@
 import arrow
 import json
 import time
+import os
 
 
 LOGFILE = None
@@ -13,8 +14,8 @@ def log(text):
         with open(LOGFILE, 'a') as f:
             f.write(timestamp + ' - ' + text.replace('\n',''))
             f.write("\n")
-    else:
-        raise FileNotFoundError('LOGFILE variable not assigned.')
+   # else:
+        #raise FileNotFoundError('LOGFILE variable not assigned.')
 
 
 # Load profile info file into memory.
@@ -39,6 +40,13 @@ def new_model_name(profile):
     name = str(len(load_info(profile)))
     return name
 
+
+# Generate name for new dataset.
+def new_dataset_name(profile, model):
+    datasets = [i.name for i in os.scandir("profiles/{}/datasets/".format(profile))]
+    indx = len(datasets)
+    name = '{}_{}'.format(model, indx)
+    return name
 
 # Get model with model name.
 def get_model(profile, model):
@@ -70,7 +78,7 @@ def link_dataset(profile, model, dataset):
     f = load_info(profile)
     i = get_model(profile, model)
     data = f[i]
-    data['dataset'] = dataset
+    data['dataset'].append(dataset)
     f[i] = data
     save_info(profile, f)
 

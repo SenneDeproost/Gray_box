@@ -1,27 +1,25 @@
-import cloudpickle
 import utils
 from utils import log
+import compress_pickle
 
 
 class Distillate:
-    def __init__(self, profile, model):
+    def __init__(self, profile, model, typ, compressed=False):
         self.profile = profile
         self.model = model
-        self.dataset_name = utils.get_dataset_name(profile, model)
-        self.path = 'profiles/{}/datasets/{}'.format(model, self.dataset_name)
+        self.typ = typ
+        self.dataset_name = utils.new_dataset_name(profile, model)
+        self.path = 'profiles/{}/datasets/{}.{}'.format(profile, self.dataset_name, self.typ)
+        self.dataset = []
+        self.compressed = compressed
 
     # Save a dataset.
     def save(self):
-        with open(self.path, '+wb') as f:
-            data = cloudpickle.dumps(self.set)
-            f.write(data)
-            f.close()
-        log('Distillate saved in {}.'.format(self.dataset_name))
+        compress_pickle.to_gz_pickle(self.dataset, self.path)
+        log('Distillate saved in {}.'.format(self.path))
 
     # Load a dataset
     def load(self, path):
-        with open(path, '+rb') as f:
-            data = f.read()
-            self.set = cloudpickle.loads(data)
-            f.close()
-        log('Distillate saved in {}.'.format(self.dataset_name))
+        data = compress_pickle.read_gz_pickle(path)
+        log('Distillate opened from {}.'.format(path))
+        return data
