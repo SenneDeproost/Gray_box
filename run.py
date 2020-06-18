@@ -15,6 +15,7 @@ def play(profile, env, alg, model_name):
     log('Algorithm {} loaded.'.format(alg))
     model_path = 'profiles/{}/models/{}'.format(profile, model_name)
     ex = 'model.append({}.load(model_path, env=env, verbose=1))'.format(alg)
+    log('Playing model {} in environment {}.'.format(model_name, env))
     env = gym.make(env)
     exec(ex, locals())
     log('Model loaded.')
@@ -22,12 +23,14 @@ def play(profile, env, alg, model_name):
 
     # Play until the end
     obs = env.reset()
-    for i in range(1000):
+    for i in range(100000):
         action, _states = model.predict(obs, deterministic=True)
         obs, reward, done, info = env.step(action)
         env.render()
         if done:
             obs = env.reset()
+            break
+    log('Closing environment.')
     env.close()
 
 

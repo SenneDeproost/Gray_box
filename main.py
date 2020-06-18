@@ -115,14 +115,16 @@ def commandParser(command, params):
         else:
             dis.distillation(model_from, model_to, model_env, profile)
 
-    # - PLAY - # /// Todo: implementing Play
+    # - PLAY - #
     elif command == 'play':
-        # Play wihtout save or load
-        profile, env, alg, model = params
-        run.play(profile, env, alg, model)
+        if n_params == 4:
+            profile, env, alg, model = params
+            res = run.play(profile, env, alg, model)
+        else:
+            raise ValueError('Incorrect amount of parameters given for {} command.'.format(command))
 
     # - TRAIN - #
-    elif command == 'train':
+    elif command == 'train': # /// Todo: implement train_from_distillate
         if n_params == 4:
             profile, env, alg, stps = params
             res = run.train_new(profile, env, alg, int(stps))
@@ -130,6 +132,10 @@ def commandParser(command, params):
         elif n_params == 5:
             profile, env, alg, stps, model = params
             res = run.train_loaded(profile, env, alg, int(stps), model)
+        elif '--from_distillate' in params:
+            params.remove('--from_distillate')
+            profile, env, alg, stps, model = params
+            #res = run.train_from_distillate(profile, env, alg, int(stps), model)
         else:
             raise ValueError('Incorrect amount of parameters given for {} command.'.format(command))
 
