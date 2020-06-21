@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="amico/|amico/cpp/|amico/haskell/|amico/mono/|amico/ocaml/|amico/pascal/|amico/python/|amico/python/agents/|amico/python/JavaPy/|amico/python/JavaPy/src/|amico/python/PyJava/|amico/python/PyJava/src/|amico/scala/|competition/|competition/cig/|competition/cig/sergeykarakovskiy/|competition/evostar/|competition/evostar/sergeykarakovskiy/|competition/gic2010/|competition/gic2010/gameplay/|competition/gic2010/gameplay/sergeykarakovskiy/|competition/gic2010/learning/|competition/gic2010/learning/sergeykarakovskiy/|competition/gic2010/turing/|competition/gic2010/turing/sergeykarakovskiy/|competition/wcci/" kind="src" path=""/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path=""/>
+</classpath>

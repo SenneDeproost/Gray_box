@@ -35,9 +35,10 @@ def record_experiences(profile, env, alg, stps, model_name):
         action, _states = model.predict(obs, deterministic=True)
         obs, reward, done, info = env.step(action)
         if i % 60 in [0, 1, 2, 3]:
-            print('Record at step {}.'.format(i))
             recorded_obs.dataset.append(obs)
             recorded_act.dataset.append(action)
+        if i % 1000 == 0:
+            print('At step {}.'.format(i))
         if done:
             obs = env.reset()
     log('Closing environment.')
