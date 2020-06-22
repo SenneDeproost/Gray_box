@@ -47,6 +47,31 @@ $(document).ready(function () {
         });
     });
 
+    /// On change distillate selection, load algorithm list.
+    $('#distillates').change(function () {
+        // Clear list
+        $('#algorithms').empty();
+        //Change the text of the default "loading" option.
+        //$('#distillates').append('Select distillate');
+        $.ajax({
+            url: '/api/list_algorithms',
+            type: 'get',
+            success: function (data) {
+
+                $.each(data, function (key, modelName) {
+                    //Use the Option() constructor to create a new HTMLOptionElement.
+                    var option = new Option(modelName, modelName);
+                    //Convert the HTMLOptionElement into a JQuery object that can be used with the append method.
+                    $(option).html(modelName);
+                    //Append the option to our Select element.
+                    $("#algorithms").append(option);
+                });
+
+
+            }
+        });
+    });
+
 
 });
 
