@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link href="style.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <meta charset="UTF-8">
     <title>Gray box web interface</title>
 </head>
 <body>
 <div class="topnav">
 
-  <a class="active" href="#home">
-      <img class="logo" src="img/logo.png" width="60px">
+  <a class="active" href="../index.html">
+      <img class="logo" src="../static/img/logo.png" width="60px">
   </a>
-  <a href="main.html">Viewer</a>
+  <a href="index.html">Viewer</a>
   <a href="train">Trainer</a>
   <a href="distill">Distiller</a>
     <a href="about">About</a>
