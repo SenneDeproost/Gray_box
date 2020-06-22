@@ -205,3 +205,5 @@ profiles/
 ./.profile
 
 *.DS_Store
+
+test.py

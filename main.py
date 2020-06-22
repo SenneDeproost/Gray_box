@@ -84,6 +84,7 @@ def commandParser(command, params):
         utils.LOGFILE = path + '/log'
         os.makedirs(path + '/models/')
         os.makedirs(path + '/datasets/')
+        os.makedirs(path + '/distillates/')
         utils.init_info(profile)
         log('Profile ' + profile + ' created.')
 
