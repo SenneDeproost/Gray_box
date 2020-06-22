@@ -91,3 +91,8 @@ body {
 .logo{
   margin-top: -18px;
 }
+
+.label{
+  margin: 5px;
+  font-family: Sans-Serif;
+}

@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/interface.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <meta charset="UTF-8">
     <title>Gray box web interface</title>
@@ -23,8 +25,24 @@
 </div>
 
 <div class="split right">
-        <canvas class="gameview"></canvas>
+    <canvas class="gameview"></canvas>
+
+    <select id="profiles">
+        <option value="-" id="loading_profiles">Profile</option>
+    </select>
+    <select id="distillates">
+        <option value="-" id="loading_distillates">Distillate</option>
+    </select>
+    <select id="algorithms">
+        <option value="-" id="loading_algorithms">Algorithm</option>
+    </select>
+    <select id="environments">
+        <option value="-" id="loading_environments">Environment</option>
+    </select>
+
 </div>
+
+
 
 </body>
 </html>

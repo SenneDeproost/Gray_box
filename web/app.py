@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, jsonify
+from flask import Flask, render_template, redirect, jsonify, request
 import sys
 import os
 sys.path.append('../')
@@ -20,7 +20,8 @@ def list_profiles():
 
 @app.route('/api/list_distillates', methods=['GET'])
 def list_distillates():
-    return jsonify(webutils.list_distillates('test'))
+    profile = request.args.get('profile')
+    return jsonify(webutils.list_distillates(profile))
 
 
 
