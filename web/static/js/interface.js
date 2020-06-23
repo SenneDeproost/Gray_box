@@ -1,3 +1,6 @@
+///import render_first_from './draw.js'
+import { first_game_render, game_render_frame } from './draw.js'
+
 // Profile choser
 $(document).ready(function () {
 
@@ -119,10 +122,8 @@ $('#load_session').click(function () {
             type: 'get',
             success: function (data) {
 
-                console.log(data)
-                var image = new Image();
-                image.src = 'data:image/png;base64,' + data['game'];
-                document.body.appendChild(image);
+                first_game_render(data['game']);
+
                 }
 
 
