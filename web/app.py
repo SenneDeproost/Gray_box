@@ -49,6 +49,10 @@ def load_session():
     return jsonify(game_img)
 
 
+@app.route('/api/session_step', methods=['GET'])
+def session_step():
+    game_img = webrun.session_step()
+    return jsonify(game_img)
 
 
 

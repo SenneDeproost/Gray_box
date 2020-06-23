@@ -8,14 +8,14 @@ import json
 import utils
 from utils import log
 
-env = None
-model = None
+ENV = None
+MODEL = None
+OBS = None
 
 
 # Load in new session // Todo: change models to distillates path
 def load_session(profile, distillate, alg, environment):
 
-    global env
     env = gym.make(environment)
     env.reset()
     #env.render()
@@ -31,19 +31,35 @@ def load_session(profile, distillate, alg, environment):
     log('Playing model {} in environment {}.'.format(distillate, env))
     exec(ex, locals())
     log('Model loaded.')
-    global model
     model = model[0]
+    global ENV
+    ENV = env
+    global MODEL
+    MODEL = model
 
     rgb = env.render(mode='rgb_array')
     game_b64 = to_b64(rgb)
     data = {}
     data['game'] = game_b64.decode("utf-8")
+    obs = env.reset()
+    global OBS
+    OBS = obs
     return data
 
 
 # Do one step in the environment with model prediction as action.
+def session_step():
+    global OBS
+    action, _states = MODEL.predict(OBS, deterministic=True)
+    OBS, reward, done, info = ENV.step(action)
 
-
+    rgb = ENV.render(mode='rgb_array')
+    game_b64 = to_b64(rgb)
+    data = {}
+    data['game'] = game_b64.decode("utf-8")
+    if done:
+        data['game'] = "done"
+    return data
 
 
 # Convert RGB array to base 64.

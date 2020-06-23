@@ -1,5 +1,5 @@
 ///import render_first_from './draw.js'
-import { first_game_render, game_render_frame } from './draw.js'
+import {first_game_render, game_render_frame} from './draw.js'
 
 // Profile choser
 $(document).ready(function () {
@@ -108,7 +108,7 @@ $(document).ready(function () {
     /////////////////////////
     /// Start new session ///
     /////////////////////////
-$('#load_session').click(function () {
+    $('#load_session').click(function () {
 
         // Request load_session
         $.ajax({
@@ -124,14 +124,66 @@ $('#load_session').click(function () {
 
                 first_game_render(data['game']);
 
+            }
+
+
+        });
+    });
+
+
+    /////////////////////////
+    /// Step in a session ///
+    /////////////////////////
+    $('#session_step').click(function () {
+
+        // Request session_step
+        $.ajax({
+            url: '/api/session_step',
+            type: 'get',
+            success: function (data) {
+
+                game_render_frame(data['game']);
+
+            }
+
+
+        });
+    });
+
+
+    //////////////////////
+    /// Play a session ///
+    //////////////////////
+
+    var pause = false;
+
+    function play() {
+        // Request session_step
+        $.ajax({
+            url: '/api/session_step',
+            type: 'get',
+            success: function (data) {
+
+                if (data['game'] == "done") {
+
+                    console.log('Game over!')
+
+
+                } else {
+                    game_render_frame(data['game']);
+                    play();
                 }
 
+            }
+        })
+    }
 
-            });
-        });
 
-
+    $('#session_play').click(function () {
+        play();
+    });
 
 
 });
+
 
