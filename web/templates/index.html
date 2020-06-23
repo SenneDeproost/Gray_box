@@ -3,11 +3,14 @@
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/interface.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/draw.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <meta charset="UTF-8">
     <title>Gray box web interface</title>
 </head>
 <body>
+
+<!-- Navbar -->
 <div class="topnav">
 
   <a class="active" href="../index.html">
@@ -19,13 +22,14 @@
     <a href="about">About</a>
 </div>
 
-<!--Canvas-->
+<!-- Treeview -->
 <div class="split left">
     <canvas class="treeview"></canvas>
 </div>
 
+<!-- Gameview -->
 <div class="split right">
-    <canvas class="gameview"></canvas>
+    <canvas id="gameview" class="gameview" width="400" height="400"></canvas>
 
     <select id="profiles">
         <option value="-" id="loading_profiles">Profile</option>
@@ -40,7 +44,7 @@
         <option value="-" id="loading_environments">Environment</option>
     </select>
 
-    <button type="button" id="load_session">Go!</button>
+    <button type="button" id="load_session">Load session</button>
 
 </div>
 

@@ -79,8 +79,6 @@ body {
 .gameview {
   margin-top: 0px;
   background-color: black;
-  width: 400px;
-  height: 400px;
   position: absolute;
   top: 25%;
   left: 50%;
