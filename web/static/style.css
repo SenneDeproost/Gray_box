@@ -94,3 +94,8 @@ body {
   margin: 5px;
   font-family: Sans-Serif;
 }
+
+.navigation{
+  position: absolute;
+  margin-top: 15px;
+}

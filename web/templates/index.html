@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script type="module" src="{{ url_for('static', filename='js/interface.js') }}"></script>
-    <script type="module" src="{{ url_for('static', filename='js/draw.js') }}"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='js/interface.js') }}" type="module"></script>
+    <script src="{{ url_for('static', filename='js/draw.js') }}" type="module"></script>
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
     <meta charset="UTF-8">
     <title>Gray box web interface</title>
 </head>
@@ -13,12 +13,12 @@
 <!-- Navbar -->
 <div class="topnav">
 
-  <a class="active" href="../index.html">
-      <img class="logo" src="../static/img/logo.png" width="60px">
-  </a>
-  <a href="index.html">Viewer</a>
-  <a href="train">Trainer</a>
-  <a href="distill">Distiller</a>
+    <a class="active" href="../index.html">
+        <img class="logo" src="../static/img/logo.png" width="60px">
+    </a>
+    <a href="index.html">Viewer</a>
+    <a href="train">Trainer</a>
+    <a href="distill">Distiller</a>
     <a href="about">About</a>
 </div>
 
@@ -29,26 +29,31 @@
 
 <!-- Gameview -->
 <div class="split right">
-    <canvas id="gameview" class="gameview" width="400" height="400"></canvas>
+    <canvas class="gameview" height="400" id="gameview" width="400"></canvas>
 
-    <select id="profiles">
-        <option value="-" id="loading_profiles">Profile</option>
-    </select>
-    <select id="distillates">
-        <option value="-" id="loading_distillates">Distillate</option>
-    </select>
-    <select id="algorithms">
-        <option value="-" id="loading_algorithms">Algorithm</option>
-    </select>
-    <select id="environments">
-        <option value="-" id="loading_environments">Environment</option>
-    </select>
 
-    <button type="button" id="load_session">Load session</button>
-    <button type="button" id="session_step">Step</button>
-    <button type="button" id="session_play">Play</button>
+    <div class="navigation centered">
+
+        <select id="profiles">
+            <option id="loading_profiles" value="-">Profile</option>
+        </select>
+        <select id="distillates">
+            <option id="loading_distillates" value="-">Distillate</option>
+        </select>
+        <select id="algorithms">
+            <option id="loading_algorithms" value="-">Algorithm</option>
+        </select>
+        <select id="environments">
+            <option id="loading_environments" value="-">Environment</option>
+        </select>
+
+        <button id="load_session" type="button">Load session</button>
+        <button id="session_step" type="button">Step</button>
+        <button id="session_play" type="button">Play</button>
+        <button id="session_stop" type="button">Pause</button>
+    </div>
+
 </div>
-
 
 
 </body>

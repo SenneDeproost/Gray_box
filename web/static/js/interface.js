@@ -166,10 +166,14 @@ $(document).ready(function () {
 
                 if (data['game'] == "done") {
 
-                    console.log('Game over!')
+                    console.log('Game over.')
 
+                } else if (pause){
 
-                } else {
+                    console.log('Game paused.')
+                }
+
+                else {
                     game_render_frame(data['game']);
                     play();
                 }
@@ -180,9 +184,13 @@ $(document).ready(function () {
 
 
     $('#session_play').click(function () {
+        pause = false;
         play();
     });
 
+        $('#session_stop').click(function () {
+        pause = true;
+    });
 
 });
 
