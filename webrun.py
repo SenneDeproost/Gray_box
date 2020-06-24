@@ -1,4 +1,5 @@
 import gym
+from stable_baselines3.common.cmd_util import make_atari_env
 from PIL import Image
 import base64
 import numpy as np
@@ -14,11 +15,10 @@ OBS = None
 
 
 # Load in new session // Todo: change models to distillates path
-def load_session(profile, distillate, alg, environment):
+def load_session(profile, distillate, alg, environment, policy_type='"CnnPolicy"'):
 
-    env = gym.make(environment)
+    env = make_atari_env(environment)
     env.reset()
-    #env.render()
 
     model = []
     alg = alg.upper()
@@ -27,11 +27,14 @@ def load_session(profile, distillate, alg, environment):
     exec(impo)
     log('Algorithm {} loaded.'.format(alg))
     model_path = 'profiles/{}/models/{}'.format(profile, distillate)
-    ex = 'model.append({}.load(model_path, env=env, verbose=1))'.format(alg)
-    log('Playing model {} in environment {}.'.format(distillate, env))
+    ex = 'model.append({}.load(model_path, env, verbose=1))'.format(alg)
+    log('Playing model {} in environment {}.'.format(distillate, environment))
     exec(ex, locals())
     log('Model loaded.')
     model = model[0]
+
+
+
     global ENV
     ENV = env
     global MODEL
@@ -50,7 +53,7 @@ def load_session(profile, distillate, alg, environment):
 # Do one step in the environment with model prediction as action.
 def session_step():
     global OBS
-    action, _states = MODEL.predict(OBS, deterministic=True)
+    action, _states = MODEL.predict(OBS)
     OBS, reward, done, info = ENV.step(action)
 
     rgb = ENV.render(mode='rgb_array')

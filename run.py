@@ -24,7 +24,7 @@ def play(profile, env, alg, model_name):
     # Play until the end
     obs = env.reset()
     for i in range(100000):
-        action, _states = model.predict(obs, deterministic=True)
+        action, _states = model.predict(obs)
         obs, reward, done, info = env.step(action)
         env.render()
         if done:
