@@ -2,11 +2,40 @@ import utils
 from utils import log
 from Distillate import *
 import gym
+import pickle
+import numpy as np
+from stable_baselines3.common.cmd_util import make_atari_env
+from structures.SoftDecisionTree.sdt.model import SoftDecisionTree
+import torch
+from torch.utils.data import DataLoader, TensorDataset
+from torchvision import datasets, transforms
 
 
-def distillation(profile, model_from, model_to, env, alg, stps, trail_size):
+def distillation(profile, model_from, model_to, env, alg, distill_steps, epochs):
     log('Distilling from model {} to model {} in environment {} for profile {}.'.format(model_from, model_to, env, profile))
-    log('Generating {} entries in dataset.'.format(stps))
+    log('Generating {} entries in dataset.'.format(epochs))
+    obs, act = record_experiences(profile, env, alg, distill_steps, model_from)
+
+    log('Training model {} with dataset {}.'.format(model_to, obs.dataset_name))
+    kwargs = {'num_workers': 1, 'pin_memory': True} if torch.cuda.is_available() else {}
+
+
+
+
+
+    model = SoftDecisionTree(args)
+
+    X = torch.tensor(obs)
+    Y = torch.tensor(act)
+    dataset = TensorDataset(X, Y)
+    train_loader = DataLoader(dataset, batch_size=64, shuffle=True, **kwargs)
+    for epoch in range(1, epochs + 1):
+        model.train_(train_loader, epoch)
+    return model
+
+
+
+
 
 
 def record_experiences(profile, env, alg, stps, model_name):
@@ -23,7 +52,7 @@ def record_experiences(profile, env, alg, stps, model_name):
     model_path = 'profiles/{}/models/{}'.format(profile, model_name)
     ex = 'model.append({}.load(model_path, env=env, verbose=1))'.format(alg)
     log('Playing model {} in environment {}.'.format(model_name, env))
-    env = gym.make(env)
+    env = make_atari_env(env)
     exec(ex, locals())
     log('Model loaded.')
     model = model[0]
@@ -47,4 +76,4 @@ def record_experiences(profile, env, alg, stps, model_name):
     recorded_obs.save()
     recorded_act.save()
     #utils.link_dataset(profile, model_name, recorded_obs.dataset_name) // Todo: Fix linkage
-
+    return recorded_obs, recorded_act

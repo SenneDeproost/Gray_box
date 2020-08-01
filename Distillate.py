@@ -4,14 +4,13 @@ import compress_pickle
 
 
 class Distillate:
-    def __init__(self, profile, model, typ, compressed=False):
+    def __init__(self, profile, model, type):
         self.profile = profile
         self.model = model
-        self.typ = typ
+        self.type = type
         self.dataset_name = utils.new_dataset_name(profile, model)
-        self.path = 'profiles/{}/datasets/{}.{}'.format(profile, self.dataset_name, self.typ)
+        self.path = 'profiles/{}/datasets/{}.{}'.format(profile, self.dataset_name, self.type)
         self.dataset = []
-        self.compressed = compressed
 
     # Save a dataset.
     def save(self):
