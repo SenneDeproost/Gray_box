@@ -56,9 +56,9 @@ def train_new(profile, env_name, alg, stps, policy_type='"MlpPolicy"'):
     # Save model.
     model_name = util.new_model_name(profile)
     model_path = 'profiles/{}/models/{}'.format(profile, model_name)
-    util.link_model(profile, model_name)
-    util.link_env(profile, model_name, env_name)
-    util.link_algorithm(profile, model_name, alg)
+    #util.link_model(profile, model_name)
+    #util.link_env(profile, model_name, env_name)
+    #util.link_algorithm(profile, model_name, alg)
     log('Saving model to {}'.format(model_name))
     model.save(model_path)
     log('Model saved.')
