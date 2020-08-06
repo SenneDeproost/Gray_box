@@ -1,5 +1,5 @@
 * ------------------------------------------------------------- *
-*                        Gray Box v0.01                         *
+*                        Gray Box v0.02                         *
 *           by Senne Deproost, senne.deproost@vub.be            *
 * ------------------------------------------------------------- *
 
@@ -8,16 +8,37 @@ Gray Explainable Artificial Intelligence Toolbox.
 COMMANDS:
 
 * help             - Display help and commands.
-* info             - Display information about the program.
-* profile-create   - Set up a new profile directory for a model.
-* profile-delete   - Delete a profile.
-* profile-set      - Set using profile variable.
-* play             - Play a loaded model policy.
-* train            - Train a policy model.
-* distill          - Distillate one model into another.
-* explain          - Show GUI and explain policy behaviour.
-* generate         - Generate dataset from a given policy.
+    $ gray help
 
+* info             - Display information about the program.
+    $ gray info
+
+* profile-create   - Set up a new profile directory for a model.
+    $ gray profile-create [PROFILE_NAME]
+
+* profile-delete   - Delete a profile.
+    $ gray profile-delete (PROFILE_NAME)
+
+* profile-set      - Set using profile variable.
+    $ gray profile-set [PROFILE_NAME]
+
+* play             - Play a loaded model policy.
+    $ gray play (PROFILE_NAME) [ENVIRONMENT] [ALGORITHM] [MODEL]
+
+* train            - Train a policy model.
+    $ gray train (PROFILE_NAME) [ENVIRONMENT] [ALGORITHM] [STEPS] (MODEL) (--from_distillate)
+
+* distill          - Distillate one model into another.
+    $ gray distill (PROFILE_NAME) [MODEL_FROM] [MODEL_TO] [ENVIRONMENT] (AMOUNT)
+
+* generate         - Generate dataset from a given policy.
+    $ gray generate (PROFILE_NAME) [ENVIRONMENT] [ALGORITHM] [MODEL] [STEPS]
+
+* web              - Run web interface.
+    $ gray web
+
+() = optional
+[] = expected
 
 PROGRAM MADE AT VRIJE UNIVERSITEIT BRUSSEL AI LAB, WITH
-PLENTY AMOUNTS OF CAFFEINE.
+HUGE AMOUNTS OF CAFFEINE.
