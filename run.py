@@ -37,7 +37,7 @@ def play(profile, env, alg, model_name):
 def train_new(profile, env_name, alg, stps, policy_type='"MlpPolicy"'):
     # Preperation
     model = []
-    log('Training new model with variables: \n  environment: {}\n  algorithm: {}\n  steps: {} \n  policy type: {}'.format(env, alg, stps, policy_type))
+    log('Training new model with variables: \n  environment: {}\n  algorithm: {}\n  steps: {} \n  policy type: {}'.format(env_name, alg, stps, policy_type))
     alg = alg.upper()
     env = gym.make(env_name)
     impo = 'from stable_baselines3 import {}'.format(alg)
