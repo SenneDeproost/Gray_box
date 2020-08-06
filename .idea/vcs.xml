@@ -3,6 +3,8 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/structures/AdaptiveNeuralTrees" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/structures/SDT" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/structures/SoftDecisionTree" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/structures/distillnntree" vcs="Git" />
   </component>
 </project>
