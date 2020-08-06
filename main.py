@@ -2,10 +2,12 @@ import os
 import shutil
 import sys
 
-import utils
-from utils import log
+import util
+from util import log
 import distillation as dis
 import run
+import subprocess
+
 
 ### --- PREPARATON --- ###
 
@@ -28,15 +30,19 @@ else:
 if not os.path.exists('profiles'):
     os.makedirs('profiles')
 
+if not os.path.exists('.working'):
+    os.makedirs('.working')
+
 PROFILES = [i.name for i in os.scandir("profiles/") if os.path.isdir(i)]
 
 # Program execution without command.
-if not COMMAND or len(PARAMS) == 0:
+if not COMMAND: #or len(PARAMS) == 0:
     COMMAND = 'info'
 
 # Use the currently set profile when none is given.
-elif not(PARAMS[0] in PROFILES) and not(COMMAND.startswith('profile-')):
-    PARAMS.insert(0, PROFILE)
+elif PARAMS:
+    if not(PARAMS[0] in PROFILES) and not(COMMAND.startswith('profile-')):
+        PARAMS.insert(0, PROFILE)
 
 ### --- COMMAND PARSING --- ###
 
@@ -46,12 +52,12 @@ def commandParser(command, params):
     if len(params) > 0:
         profile = params[0]
         profile_path = 'profiles/' + profile
-        utils.LOGFILE = profile_path + '/log'
+        util.LOGFILE = profile_path + '/log'
     n_params = len(params)
 
     # - NO COMMAND - #
     # No command given. Just go to 'info'.
-    if not (command) or n_params < 1:
+    if not (command): #or n_params < 1:
         command = 'info'
 
     # - INFO - #
@@ -81,11 +87,11 @@ def commandParser(command, params):
             raise FileExistsError('Chosen profile ID is already made.')
         log_file = open(path + '/log', '+w')
         log_file.close()
-        utils.LOGFILE = path + '/log'
+        util.LOGFILE = path + '/log'
         os.makedirs(path + '/models/')
         os.makedirs(path + '/datasets/')
         os.makedirs(path + '/distillates/')
-        utils.init_info(profile)
+        util.init_info(profile)
         log('Profile ' + profile + ' created.')
 
     # - DELETE - #
@@ -113,8 +119,10 @@ def commandParser(command, params):
         if len(params) == 4:
             n_data = params[4]
             dis.distillation(model_from, model_to, model_env, profile, n_data)
-        else:
+        elif len(params) == 3:
             dis.distillation(model_from, model_to, model_env, profile)
+        else:
+            raise ValueError('Incorrect amount of parameters given for {} command.'.format(command))
 
     # - PLAY - #
     elif command == 'play':
@@ -140,10 +148,14 @@ def commandParser(command, params):
         else:
             raise ValueError('Incorrect amount of parameters given for {} command.'.format(command))
 
-
-
-
-
+    #- WEB -#
+    elif command == 'web':
+        import web.app as webapp
+        os.chdir('./Gray_box/')
+        if len(params) == 0:
+            webapp.app.run()
+        else:
+            raise ValueError('Incorrect amount of parameters given for {} command.'.format(command))
 
 
 

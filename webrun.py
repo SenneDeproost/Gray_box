@@ -6,8 +6,8 @@ import numpy as np
 import cv2
 from io import BytesIO
 import json
-import utils
-from utils import log
+import util
+from util import log
 
 ENV = None
 MODEL = None
@@ -17,6 +17,9 @@ OBS = None
 # Load in new session // Todo: change models to distillates path
 def load_session(profile, distillate, alg, environment, policy_type='"CnnPolicy"'):
 
+    init = dict()
+
+    ## Loading game
     env = make_atari_env(environment)
     env.reset()
 
@@ -34,39 +37,57 @@ def load_session(profile, distillate, alg, environment, policy_type='"CnnPolicy"
     model = model[0]
 
 
-
+    ## Initial step in game
     global ENV
     ENV = env
     global MODEL
     MODEL = model
 
     rgb = env.render(mode='rgb_array')
-    game_b64 = to_b64(rgb)
-    data = {}
-    data['game'] = game_b64.decode("utf-8")
+    game_b64 = rgb_to_b64(rgb)
+    init['game'] = game_b64.decode("utf-8")
     obs = env.reset()
+    init['reward'] = "0"
     global OBS
     OBS = obs
-    return data
+
+    ## Tree visualisation
+    path = "/Users/senne/Thesis/Gray_box/web/static/img/tree.svg"
+    f = open(path, 'r')
+    tree_data = f.read()
+    init['tree'] = tree_data
+
+    return init
 
 
 # Do one step in the environment with model prediction as action.
 def session_step():
+
+    step = dict()
+
+    ## Step in the game
     global OBS
     action, _states = MODEL.predict(OBS)
     OBS, reward, done, info = ENV.step(action)
+    step['reward'] = str(reward[0])
 
     rgb = ENV.render(mode='rgb_array')
-    game_b64 = to_b64(rgb)
-    data = {}
-    data['game'] = game_b64.decode("utf-8")
+    game_b64 = rgb_to_b64(rgb)
+    step['game'] = game_b64.decode("utf-8")
     if done:
-        data['game'] = "done"
-    return data
+        step['game'] = "done"
+
+    ## Tree visualisation
+    path = "/Users/senne/Thesis/Gray_box/web/static/img/tree.svg"
+    f = open(path, 'r')
+    tree_data = f.read()
+    step['tree'] = tree_data
+
+    return step
 
 
 # Convert RGB array to base 64.
-def to_b64(array):
+def rgb_to_b64(array):
     img = Image.fromarray(array)
     im_file = BytesIO()
     img.save(im_file, format="PNG")

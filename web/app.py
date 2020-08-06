@@ -45,14 +45,14 @@ def load_session():
     environment = request.args.get('environment')
     algorithm = request.args.get('algorithm')
 
-    game_img = webrun.load_session(profile, distillate, algorithm, environment)
-    return jsonify(game_img)
+    init = webrun.load_session(profile, distillate, algorithm, environment)
+    return jsonify(init)
 
 
 @app.route('/api/session_step', methods=['GET'])
 def session_step():
-    game_img = webrun.session_step()
-    return jsonify(game_img)
+    step = webrun.session_step()
+    return jsonify(step)
 
 
 

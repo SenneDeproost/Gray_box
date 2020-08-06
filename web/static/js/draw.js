@@ -53,9 +53,9 @@ function to_PNG(b64) {
     return img;
 }
 
-function to_SVG(b64) {
+function to_SVG(xml) {
     var img = new Image();
-    img.src = "data:image/svg+xml;base64," + b64;
+    img.src = "data:image/svg+xml;utf8," + xml;
     return img;
 }
 
@@ -104,16 +104,16 @@ export function game_render_frame(b64) {
 /// VIEW ///
 ///////////
 
-export function tree_render(b64){
+export function tree_render(xml){
     var treecanvas = document.getElementById("treeview");
     var treectx = treecanvas.getContext("2d");
 
-    var img = to_SVG(b64);
+    var img = to_SVG(xml)
 
-    img.onload = function () {
-        clear_tree_view();
-        treectx.drawImage(this, 0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
-
+    img.onload = function() {
+        clear_tree_view()
+        treectx.drawImage(img, 0, 0);
     }
+
 }
 

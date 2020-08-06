@@ -1,17 +1,10 @@
-import utils
-from utils import log
 from Distillate import *
-import gym
-import pickle
-import numpy as np
-from stable_baselines3.common.cmd_util import make_atari_env
-from structures.SoftDecisionTree.sdt.model import SoftDecisionTree
-import torch
-from torch.utils.data import DataLoader, TensorDataset
-from torchvision import datasets, transforms
 
 
 def distillation(profile, model_from, model_to, env, alg, distill_steps, epochs):
+    from structures.SoftDecisionTree.sdt.model import SoftDecisionTree
+    import torch
+    from torch.utils.data import DataLoader, TensorDataset
     log('Distilling from model {} to model {} in environment {} for profile {}.'.format(model_from, model_to, env, profile))
     log('Generating {} entries in dataset.'.format(epochs))
     obs, act = record_experiences(profile, env, alg, distill_steps, model_from)
@@ -39,6 +32,7 @@ def distillation(profile, model_from, model_to, env, alg, distill_steps, epochs)
 
 
 def record_experiences(profile, env, alg, stps, model_name):
+    from stable_baselines3.common.cmd_util import make_atari_env
     recorded_obs = Distillate(profile, model_name, typ='obs')
     recorded_act = Distillate(profile, model_name, typ='act')
 

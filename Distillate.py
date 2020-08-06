@@ -1,5 +1,5 @@
-import utils
-from utils import log
+import util
+from util import log
 import compress_pickle
 
 
@@ -8,7 +8,7 @@ class Distillate:
         self.profile = profile
         self.model = model
         self.type = type
-        self.dataset_name = utils.new_dataset_name(profile, model)
+        self.dataset_name = util.new_dataset_name(profile, model)
         self.path = 'profiles/{}/datasets/{}.{}'.format(profile, self.dataset_name, self.type)
         self.dataset = []
 

@@ -1,5 +1,5 @@
 ///import render_first_from './draw.js'
-import {first_game_render, game_render_frame} from './draw.js'
+import {first_game_render, game_render_frame, tree_render} from './draw.js'
 
 // Profile choser
 $(document).ready(function () {
@@ -123,6 +123,7 @@ $(document).ready(function () {
             success: function (data) {
 
                 first_game_render(data['game']);
+                tree_render(data['tree']);
 
             }
 
@@ -142,7 +143,9 @@ $(document).ready(function () {
             type: 'get',
             success: function (data) {
 
+                tree_render(data['tree']);
                 game_render_frame(data['game']);
+
 
             }
 
@@ -174,6 +177,7 @@ $(document).ready(function () {
                 }
 
                 else {
+                    tree_render(data['tree']);
                     game_render_frame(data['game']);
                     play();
                 }

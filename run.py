@@ -1,8 +1,7 @@
-import utils
-from utils import log
+import util
+from util import log
 #import stable_baselines3
 import gym
-from importlib import import_module
 
 
 def play(profile, env, alg, model_name):
@@ -40,6 +39,7 @@ def train_new(profile, env, alg, stps, policy_type='"MlpPolicy"'):
     model = []
     log('Training new model with variables: \n  environment: {}\n  algorithm: {}\n  steps: {} \n  policy type: {}'.format(env, alg, stps, policy_type))
     alg = alg.upper()
+    env = gym.make(env)
     impo = 'from stable_baselines3 import {}'.format(alg)
     log('Loading learning algorithm.')
     exec(impo)
@@ -54,11 +54,11 @@ def train_new(profile, env, alg, stps, policy_type='"MlpPolicy"'):
     model.learn(total_timesteps=stps)
 
     # Save model.
-    model_name = utils.new_model_name(profile)
+    model_name = util.new_model_name(profile)
     model_path = 'profiles/{}/models/{}'.format(profile, model_name)
-    utils.link_model(profile, model_name)
-    utils.link_env(profile, model_name, env)
-    utils.link_algorithm(profile, model_name, alg)
+    util.link_model(profile, model_name)
+    util.link_env(profile, model_name, env)
+    util.link_algorithm(profile, model_name, alg)
     log('Saving model to {}'.format(model_name))
     model.save(model_path)
     log('Model saved.')
@@ -86,7 +86,7 @@ def train_loaded(profile, env, alg, stps, model_name, policy_type='"MlpPolicy"')
     model.learn(total_timesteps=stps)
 
     # Save model.
-    model_name = utils.new_model_name(profile)
+    model_name = util.new_model_name(profile)
     #utils.link_model(profile, model_name)
     #utils.link_env(profile, model_name, env)
     #utils.link_algorithm(profile, model_name, alg)
