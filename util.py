@@ -36,9 +36,14 @@ def save_info(profile, data):
 
 
 # Generate new model name.
-def new_model_name(profile):
-    name = str(len(load_info(profile)))
-    return name
+def new_model_name(profile, env, alg, stps):
+    base_name = "{}_{}_{}".format(env, alg, stps)
+    version = 0
+    for f in os.listdir("./profiles/{}/models".format(profile)):
+        if f.startswith(base_name):
+            version += 1
+    model_name = "{}_{}".format(base_name, version)
+    return model_name
 
 
 # Generate name for new dataset.
