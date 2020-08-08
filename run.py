@@ -60,7 +60,7 @@ def train_new(profile, env_name, alg, stps, policy_type='"CnnPolicy"'):
     model.learn(total_timesteps=stps)
 
     # Save model.
-    model_name = util.new_model_name(profile, env, alg, stps)
+    model_name = util.new_model_name(profile, env_name, alg, stps)
     model_path = 'profiles/{}/models/{}'.format(profile, model_name)
     log('Saving model to {}'.format(model_name))
     model.save(model_path)

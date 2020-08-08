@@ -15,7 +15,7 @@ OBS = None
 
 
 # Load in new session // Todo: change models to distillates path
-def load_session(profile, distillate, alg, environment, policy_type='"CnnPolicy"'):
+def load_session(profile, distillate, alg, environment, policy_type='"MlpPolicy"'):
 
     init = dict()
 
@@ -69,7 +69,7 @@ def session_step():
     global OBS
     action, _states = MODEL.predict(OBS)
     OBS, reward, done, info = ENV.step(action)
-    step['reward'] = str(reward[0])
+    step['reward'] = str(reward)
 
     rgb = ENV.render(mode='rgb_array')
     game_b64 = rgb_to_b64(rgb)
