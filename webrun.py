@@ -20,7 +20,7 @@ def load_session(profile, distillate, alg, environment, policy_type='"CnnPolicy"
     init = dict()
 
     ## Loading game
-    env = make_atari_env(environment)
+    env = gym.make(environment)
     env.reset()
 
     model = []
