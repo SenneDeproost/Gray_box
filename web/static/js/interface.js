@@ -8,6 +8,8 @@ $(document).ready(function () {
     /// Select options ///
     //////////////////////
 
+    ////////////////////////////////////////////// On document load
+
     /// Load profiles for selection
     $.ajax({
         url: '/api/list_profiles',
@@ -29,12 +31,12 @@ $(document).ready(function () {
         }
     });
 
+    ////////////////////////////////////////////// On profile select
+
     /// On change profile selection, load distillates list.
     $('#profiles').change(function () {
-        // Clear list
         $('#distillates').empty();
-        //Change the text of the default "loading" option.
-        //$('#distillates').append('Select distillate');
+        $('#distillates').append(new Option("Select model", "-"));
         $.ajax({
             url: '/api/list_distillates',
             data: {profile: $('#profiles option:selected').text()},
@@ -49,16 +51,26 @@ $(document).ready(function () {
                     //Append the option to our Select element.
                     $("#distillates").append(option);
                 });
-
-
             }
         });
     });
+
+    ////////////////////////////////////////////// On type change
+
+    // On change type list
+    $('#type').change(function () {
+
+    })
+
+
+
+////////////////////////////////////////////// On type distillate
 
     /// On change distillate selection, load algorithm list.
     $('#distillates').change(function () {
         // Clear list
         $('#algorithms').empty();
+        $('#algorithms').append(new Option("Select algorithm", "-"));
         //Change the text of the default "loading" option.
         //$('#distillates').append('Select distillate');
         $.ajax({
@@ -80,10 +92,13 @@ $(document).ready(function () {
         });
     });
 
+    ////////////////////////////////////////////// On type algorithm
+
     /// On change distillate selection, load algorithm list.
     $('#algorithms').change(function () {
         // Clear list
         $('#environments').empty();
+        $('#environments').append(new Option("Select environment", "-"));
         //Change the text of the default "loading" option.
         //$('#distillates').append('Select distillate');
         $.ajax({
@@ -104,6 +119,7 @@ $(document).ready(function () {
             }
         });
     });
+
 
     /////////////////////////
     /// Start new session ///
@@ -145,11 +161,7 @@ $(document).ready(function () {
 
                 tree_render(data['tree']);
                 game_render_frame(data['game']);
-
-
             }
-
-
         });
     });
 
