@@ -25,7 +25,8 @@ def list_profiles():
 @app.route('/api/list_distillates', methods=['GET'])
 def list_distillates():
     profile = request.args.get('profile')
-    return jsonify(webutils.list_distillates(profile))
+    type = request.args.get('type')
+    return jsonify(webutils.list_distillates(profile, type))
 
 
 @app.route('/api/list_algorithms', methods=['GET'])

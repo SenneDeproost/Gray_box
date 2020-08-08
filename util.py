@@ -47,10 +47,9 @@ def new_model_name(profile, env, alg, stps):
 
 
 # Generate name for new dataset.
-def new_dataset_name(profile, model):
-    datasets = [i.name for i in os.scandir("profiles/{}/datasets/".format(profile))]
-    indx = len(datasets)
-    name = '{}_{}'.format(model, indx)
+def new_dataset_name(profile, model, amount):
+    #version = round((len([i.name for i in os.scandir("profiles/{}/datasets/".format(profile))]) - 0.1) / 2) # Some magic to make versions work
+    name = '{}_{}'.format(model, amount)
     return name
 
 

@@ -111,8 +111,6 @@ def commandParser(command, params):
 
     # - DISTILL - # /// Todo: implementing distill + change params position
     elif command == 'distill':
-        if len(params) < 3:
-            raise ValueError('Missing arguments for distill.')
         model_from = params[1]
         model_to = params[2]
         model_env = params[3]
@@ -129,6 +127,15 @@ def commandParser(command, params):
         if n_params == 4:
             profile, env, alg, model = params
             res = run.play(profile, env, alg, model)
+        else:
+            raise ValueError('Incorrect amount of parameters given for {} command.'.format(command))
+
+    # - GENERATE - #
+    # Generate a new dataset for distillation from model.
+    elif command == 'generate':
+        if n_params == 5:
+            profile, env, alg, model, steps = params
+            dis.record_experiences(profile, env, alg, steps, model)
         else:
             raise ValueError('Incorrect amount of parameters given for {} command.'.format(command))
 

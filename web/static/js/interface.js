@@ -39,7 +39,10 @@ $(document).ready(function () {
         $('#distillates').append(new Option("Select model", "-"));
         $.ajax({
             url: '/api/list_distillates',
-            data: {profile: $('#profiles option:selected').text()},
+            data: {
+                profile: $('#profiles option:selected').text(),
+                type: $('#type option:selected').text(),
+            },
             type: 'get',
             success: function (data) {
 
@@ -59,7 +62,27 @@ $(document).ready(function () {
 
     // On change type list
     $('#type').change(function () {
+        $('#distillates').empty();
+        $('#distillates').append(new Option("Select model", "-"));
+        $.ajax({
+            url: '/api/list_distillates',
+            data: {
+                profile: $('#profiles option:selected').text(),
+                type: $('#type option:selected').text(),
+            },
+            type: 'get',
+            success: function (data) {
 
+                $.each(data, function (key, modelName) {
+                    //Use the Option() constructor to create a new HTMLOptionElement.
+                    var option = new Option(modelName, modelName);
+                    //Convert the HTMLOptionElement into a JQuery object that can be used with the append method.
+                    $(option).html(modelName);
+                    //Append the option to our Select element.
+                    $("#distillates").append(option);
+                });
+            }
+        });
     })
 
 

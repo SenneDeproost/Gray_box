@@ -8,9 +8,9 @@ def list_profiles():
 
 
 # Return list of all distillates in profile.
-def list_distillates(profile):
-    path = 'profiles/{}/distillates'.format(profile)
-    distillates = [dI for dI in os.listdir(path) if os.path.isdir(os.path.join(path,dI))]
+def list_distillates(profile, type):
+    path = 'profiles/{}/{}'.format(profile, type)
+    distillates = os.listdir(path)
     return distillates
 
 

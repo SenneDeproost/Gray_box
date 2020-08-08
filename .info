@@ -29,7 +29,7 @@ COMMANDS:
     $ gray train (PROFILE_NAME) [ENVIRONMENT] [ALGORITHM] [STEPS] (MODEL) (--from_distillate)
 
 * distill          - Distillate one model into another.
-    $ gray distill (PROFILE_NAME) [MODEL_FROM] [MODEL_TO] [ENVIRONMENT] (AMOUNT)
+    $ gray distill (PROFILE_NAME) [MODEL_FROM] [MODEL_TO] [ENVIRONMENT] (STEPS)
 
 * generate         - Generate dataset from a given policy.
     $ gray generate (PROFILE_NAME) [ENVIRONMENT] [ALGORITHM] [MODEL] [STEPS]

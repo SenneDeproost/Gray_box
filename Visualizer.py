@@ -1,33 +1,21 @@
-
 import sys
+
 sys.path.append("./structures/AdaptiveNeuralTrees")
 
-import time
-from Visualizer import *
-import torch
-import torch.nn as nn
-from torch.optim import Adam
 from structures.AdaptiveNeuralTrees.utils import load_tree_model
 from structures.SoftDecisionTree.sdt.model import SoftDecisionTree
 import structures.SoftDecisionTree.args as sdt_args
-import numpy as np
 import matplotlib.pyplot as plt
 
-import torchvision
-import torchfunc
-import torch
 import json
-from ete3 import Tree
 
 import numpy as np
 
 import queue
 
 import torch
-import torch.nn as nn
-from torch.optim import Adam
 
-from ete3 import Tree, TreeStyle, add_face_to_node, TextFace, faces, ImgFace
+from ete3 import Tree, TreeStyle, add_face_to_node, TextFace, ImgFace
 
 
 class Visualizer:
@@ -54,7 +42,7 @@ class Visualizer:
             self.model = load_tree_model(path)
         if self.type == "SDT":
             args = sdt_args.parser.parse_args()
-            args.device = torch.device('cpu') ###### REMOVE!!!!!!
+            args.device = torch.device('cpu')  ###### REMOVE!!!!!!
             model = SoftDecisionTree(args)
             model.load_state_dict(torch.load(path, map_location=torch.device(args.device)))
             model.eval()
@@ -103,7 +91,7 @@ class Visualizer:
         root = self.structure[0]
         root_index = root['index']
         self.tree = Tree("(0);")
-        #self.tree.add_child(name=str(root_index))
+        # self.tree.add_child(name=str(root_index))
 
         q = queue.Queue()
         q.put(self.tree.children[0])
@@ -135,7 +123,6 @@ class Visualizer:
                     node.add_child(name=right_name)
                 children = node.children
                 for child in children:
-
                     q.put(child)
 
     # Show tree with correct layout
@@ -156,6 +143,7 @@ class Visualizer:
             F = TextFace(node.name, tight_text=True)
             F.rotation = -90
             add_face_to_node(F, node, column=0, position="branch-right")
+
         ts.layout_fn = my_layout
 
     # Visualize node weights
@@ -194,7 +182,7 @@ class Visualizer:
                 # plt.colorbar()
                 plt.xticks([])
                 plt.yticks([])
-                #plt.show()
+                # plt.show()
                 plt.savefig("{}{}.svg".format(wdir, i), bbox_inches='tight')
 
     # Add visualised images to nodes in tree
@@ -228,10 +216,3 @@ class Visualizer:
             node.img_style['vt_line_width'] = 0
             node.img_style['fgcolor'] = 'black'
             node.img_style['size'] = 0
-
-
-
-
-
-
-

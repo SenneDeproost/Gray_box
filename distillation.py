@@ -1,5 +1,5 @@
 from Distillate import *
-
+import gym
 
 def distillation(profile, model_from, model_to, env, alg, distill_steps, epochs):
     from structures.SoftDecisionTree.sdt.model import SoftDecisionTree
@@ -31,13 +31,14 @@ def distillation(profile, model_from, model_to, env, alg, distill_steps, epochs)
 
 
 
-def record_experiences(profile, env, alg, stps, model_name):
+def record_experiences(profile, env_name, alg, steps, model_name):
     from stable_baselines3.common.cmd_util import make_atari_env
-    recorded_obs = Distillate(profile, model_name, typ='obs')
-    recorded_act = Distillate(profile, model_name, typ='act')
+    recorded_obs = Distillate(profile, model_name, type='obs')
+    recorded_act = Distillate(profile, model_name, type='act')
 
     # Preperation
     model = []
+
     alg = alg.upper()
     impo = 'from stable_baselines3 import {}'.format(alg)
     log('Loading learning algorithm.')
@@ -45,8 +46,8 @@ def record_experiences(profile, env, alg, stps, model_name):
     log('Algorithm {} loaded.'.format(alg))
     model_path = 'profiles/{}/models/{}'.format(profile, model_name)
     ex = 'model.append({}.load(model_path, env=env, verbose=1))'.format(alg)
-    log('Playing model {} in environment {}.'.format(model_name, env))
-    env = make_atari_env(env)
+    log('Playing model {} in environment {}.'.format(model_name, env_name))
+    env = gym.make(env_name)
     exec(ex, locals())
     log('Model loaded.')
     model = model[0]
@@ -54,10 +55,11 @@ def record_experiences(profile, env, alg, stps, model_name):
     # Play until the end
     log('Generating dataset.')
     obs = env.reset()
+    stps = int(steps)
     for i in range(stps):
         action, _states = model.predict(obs, deterministic=True)
         obs, reward, done, info = env.step(action)
-        if i % 60 in [0, 1, 2, 3]:
+        if i % 15 in [0, 1, 2, 3]:
             recorded_obs.dataset.append(obs)
             recorded_act.dataset.append(action)
         if i % 1000 == 0:
@@ -69,5 +71,4 @@ def record_experiences(profile, env, alg, stps, model_name):
 
     recorded_obs.save()
     recorded_act.save()
-    #utils.link_dataset(profile, model_name, recorded_obs.dataset_name) // Todo: Fix linkage
     return recorded_obs, recorded_act

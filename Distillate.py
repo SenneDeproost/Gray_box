@@ -8,17 +8,18 @@ class Distillate:
         self.profile = profile
         self.model = model
         self.type = type
-        self.dataset_name = util.new_dataset_name(profile, model)
-        self.path = 'profiles/{}/datasets/{}.{}'.format(profile, self.dataset_name, self.type)
         self.dataset = []
 
     # Save a dataset.
     def save(self):
-        compress_pickle.to_gz_pickle(self.dataset, self.path)
-        log('Distillate saved in {}.'.format(self.path))
+        amount = len(self.dataset)
+        dataset_name = util.new_dataset_name(self.profile, self.model, amount)
+        path = 'profiles/{}/datasets/{}.{}'.format(self.profile, dataset_name, self.type)
+        compress_pickle.dump(self.dataset, path, compression="gzip", set_default_extension=False)
+        log('Distillate saved in {}.'.format(path))
 
     # Load a dataset
     def load(self, path):
-        data = compress_pickle.read_gz_pickle(path)
+        data = compress_pickle.load(path, compression="gzip", set_default_extension=False)
         log('Distillate opened from {}.'.format(path))
         return data
