@@ -2,9 +2,11 @@ import util
 from util import log
 #import stable_baselines3
 import gym
+from stable_baselines3.common.cmd_util import make_atari_env
+import envlist
 
 
-def play(profile, env, alg, model_name):
+def play(profile, env_name, alg, model_name):
     # Preperation
     model = []
 
@@ -16,8 +18,9 @@ def play(profile, env, alg, model_name):
     log('Algorithm {} loaded.'.format(alg))
     model_path = 'profiles/{}/models/{}'.format(profile, model_name)
     ex = 'model.append({}.load(model_path, env=env, verbose=1))'.format(alg)
-    log('Playing model {} in environment {}.'.format(model_name, env))
-    env = gym.make(env)
+    log('Playing model {} in environment {}.'.format(model_name, env_name))
+    if env_name in envlist.atari:
+        env = make_atari_env(env_name)
     exec(ex, locals())
 
     log('Model loaded.')
@@ -43,7 +46,8 @@ def train_new(profile, env_name, alg, stps, policy_type='"CnnPolicy"'):
 
     log('Training new model with variables: \n  environment: {}\n  algorithm: {}\n  steps: {} \n  policy type: {}'.format(env_name, alg, stps, policy_type))
     alg = alg.upper()
-    env = gym.make(env_name)
+    if env_name in envlist.atari:
+        env = make_atari_env(env_name)
     impo = 'from stable_baselines3 import {}'.format(alg)
     log('Loading learning algorithm.')
     exec(impo)
@@ -68,11 +72,11 @@ def train_new(profile, env_name, alg, stps, policy_type='"CnnPolicy"'):
 
 
 # Create a new model and train it.
-def train_loaded(profile, env, alg, stps, model_name, policy_type='"MlpPolicy"'):
+def train_loaded(profile, env_name, alg, stps, model_name, policy_type='"MlpPolicy"'):
     # Preperation
     model = []
 
-    log('Training saved model with variables: \n environment: {}\n algorithm: {}\n steps: {} \n policy type: {} \n model: {}'.format(env, alg, stps, policy_type, model_name))
+    log('Training saved model with variables: \n environment: {}\n algorithm: {}\n steps: {} \n policy type: {} \n model: {}'.format(env_name, alg, stps, policy_type, model_name))
     alg = alg.upper()
     impo = 'from stable_baselines3 import {}'.format(alg)
     log('Loading learning algorithm.')
@@ -81,7 +85,8 @@ def train_loaded(profile, env, alg, stps, model_name, policy_type='"MlpPolicy"')
     log('Algorithm {} loaded.'.format(alg))
     model_path = 'profiles/{}/models/{}'.format(profile, model_name)
     ex = 'model.append({}.load(model_path, env=env, verbose=1))'.format(alg)
-    env = gym.make(env)
+    if env_name in envlist:
+        env = make_atari_env(env_name)
     exec(ex, locals())
 
     log('Model loaded.')

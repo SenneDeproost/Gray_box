@@ -41,8 +41,28 @@ class Visualizer:
         if self.type == "ANT":
             self.model = load_tree_model(path)
         if self.type == "SDT":
-            args = sdt_args.parser.parse_args()
-            args.device = torch.device('cpu')  ###### REMOVE!!!!!!
+
+            # Import args file
+            import importlib.util
+            spec = importlib.util.spec_from_file_location("args", args)
+            foo = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(foo)
+            parser = foo.parser
+            args = parser.parse_args()
+
+            # CUDA
+            args.cuda = not args.no_cuda and torch.cuda.is_available()
+            if args.cuda:
+                args.device = torch.device('cuda')
+                if args.cuda_deterministic:
+                    torch.backends.cudnn.deterministic = True
+                    torch.backends.cudnn.benchmark = False
+                print('Using GPU')
+            else:
+                args.device = torch.device('cpu')
+                print('Using CPU')
+
+            # Load SDT
             model = SoftDecisionTree(args)
             model.load_state_dict(torch.load(path, map_location=torch.device(args.device)))
             model.eval()

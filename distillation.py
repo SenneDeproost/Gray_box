@@ -1,5 +1,6 @@
 from Distillate import *
 import gym
+from stable_baselines3.common.cmd_util import make_atari_env
 
 def distillation(profile, model_from, model_to, env, alg, distill_steps, epochs):
     from structures.SoftDecisionTree.sdt.model import SoftDecisionTree
@@ -47,7 +48,8 @@ def record_experiences(profile, env_name, alg, steps, model_name):
     model_path = 'profiles/{}/models/{}'.format(profile, model_name)
     ex = 'model.append({}.load(model_path, env=env, verbose=1))'.format(alg)
     log('Playing model {} in environment {}.'.format(model_name, env_name))
-    env = gym.make(env_name)
+    if env_name in gym.envs.registry.all():
+        env = make_atari_env(env_name)
     exec(ex, locals())
     log('Model loaded.')
     model = model[0]
