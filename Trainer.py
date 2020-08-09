@@ -3,6 +3,7 @@ from structures.SoftDecisionTree.sdt.model import SoftDecisionTree
 from torch.utils.data import TensorDataset, DataLoader
 import torch
 from Distillate import *
+import numpy as np
 
 class Trainer:
 
@@ -64,8 +65,8 @@ class Trainer:
         act = Distillate(profile, model_name, 'act')
         obs.load('./profiles/{}/datasets/{}.obs'.format(profile, model_name))
         act.load('./profiles/{}/datasets/{}.act'.format(profile, model_name))
-        obs = torch.as_tensor(obs.dataset)
-        act = torch.as_tensor(act.dataset)
+        obs = torch.from_numpy(np.array(obs.dataset))
+        act = torch.from_numpy(np.array(act.dataset))
 
         # Get shapes input and output
         i_w = obs.shape[1]
