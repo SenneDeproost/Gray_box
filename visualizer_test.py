@@ -40,7 +40,7 @@ import matplotlib.pyplot as plt
 
 
 q = Visualizer('SDT')
-q.load_model('./.working/best.pt', 'breakout_args.py')
+q.load_model('./.working/best.pt', 'pong_args.py')
 q.build_tree()
 q.render_nodes(84, 84)
 q.add_node_visuals()
