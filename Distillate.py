@@ -22,4 +22,5 @@ class Distillate:
     def load(self, path):
         data = compress_pickle.load(path, compression="gzip", set_default_extension=False)
         log('Distillate opened from {}.'.format(path))
+        self.dataset = data
         return data

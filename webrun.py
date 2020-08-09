@@ -8,6 +8,7 @@ from io import BytesIO
 import json
 import util
 from util import log
+import envlist
 
 ENV = None
 MODEL = None
@@ -20,7 +21,8 @@ def load_session(profile, distillate, alg, environment, policy_type='"MlpPolicy"
     init = dict()
 
     ## Loading game
-    env = gym.make(environment)
+    if environment in envlist.atari:
+        env = make_atari_env(environment)
     env.reset()
 
     model = []

@@ -4,8 +4,8 @@ import pickle
 parser = argparse.ArgumentParser(description='Soft Decision Tree')
 # Model args
 parser.add_argument('--batch-size', type=int, default=64, help='input batch size for training (default: 64)')
-parser.add_argument('--input-dim', type=int, default=100800, help='input dimension size(default: 784)')
-parser.add_argument('--output-dim', type=int, default=3, help='output dimension size (default: 10)')
+parser.add_argument('--input-dim', type=int, default=7056, help='input dimension size(default: 784)')
+parser.add_argument('--output-dim', type=int, default=4, help='output dimension size (default: 10)')
 parser.add_argument('--depth', type=int, default=5, help='Depth of tree (default: 5)')
 parser.add_argument('--lmbda', type=float, default=0.1, help='penalty strength rate (default: 0.1)')
 # Training args
@@ -19,7 +19,7 @@ parser.add_argument('--cuda-deterministic', action='store_true', default=False,
 # Logging
 parser.add_argument('--log-interval', type=int, default=20,
                     help='how many batches to wait before logging training status')
-parser.add_argument('--save', default='./result/tree/', help='Folder to save trained models')
+parser.add_argument('--save', default='./.working', help='Folder to save trained models')
 parser.add_argument('--tensorboard', action='store_true', default=False, help='Tensorboard logging')
 
 # Dataset

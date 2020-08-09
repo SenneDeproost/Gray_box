@@ -3,6 +3,7 @@ from Trainer import *
 # Load SDT for MNIST
 t = Trainer('SDT')
 args = {}
-args['depth'] = 7
+args['depth'] = 5
 
-t.new_model('best.pt', 'breakout_args.py', args)
+t.new_model('breakout_args.py', args)
+t.train('Senne', 'BreakoutNoFrameskip-v4_PPO_5000000_0_53336')
