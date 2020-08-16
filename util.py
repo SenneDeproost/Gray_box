@@ -2,6 +2,7 @@ import arrow
 import json
 import time
 import os
+import cv2
 
 
 LOGFILE = None
@@ -66,3 +67,16 @@ def get_model(profile, model):
 def init_info(profile):
     data = []
     save_info(profile, data)
+
+
+# Preprocess the observation
+    # Grayscale preprocess
+def preprocess(observation, thrshld, width, height):
+    observation = observation.reshape(height, width)
+    observation = cv2.cvtColor(observation, cv2.COLOR_GRAY2BGR)
+    observation = cv2.cvtColor(observation, cv2.COLOR_BGR2GRAY)
+    observation, th1 = cv2.threshold(observation, thrshld, 255, cv2.THRESH_BINARY)
+    #plt.imshow(th1, cmap='gray')
+    #plt.show()
+    #exit()
+    return th1

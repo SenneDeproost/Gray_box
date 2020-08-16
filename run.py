@@ -41,7 +41,8 @@ def play(profile, env_name, alg, model_name):
 
 # Create a new model and train it.
 def train_new(profile, env_name, alg, stps, policy_type='"CnnPolicy"'):
-    from stable_baselines3.common.atari_wrappers import WarpFrame
+    from stable_baselines3.common.atari_wrappers import WarpFrame, EpisodicLifeEnv, AtariWrapper
+    from baselines.common.retro_wrappers import WarpFrame
     # Preperation
     model = []
 
@@ -49,7 +50,9 @@ def train_new(profile, env_name, alg, stps, policy_type='"CnnPolicy"'):
     alg = alg.upper()
     if env_name in envlist.atari:
         height, width = (210, 160)
-        env = WarpFrame(gym.make(env_name), width=width, height=height)
+        #env = EpisodicLifeEnv(gym.make(env_name))
+        #env = AtariWrapper(gym.make(env_name))
+        env = WarpFrame(gym.make(env_name), width=width, height=height, grayscale=True)
         obs = env.reset()
         # env.render()
         # obs = util.preprocess(obs, thrshld=envlist.threshold[env_name], width=width, height=height)
