@@ -213,6 +213,7 @@ class Visualizer:
             node = nodes[i]
             path = "{}{}.svg".format(wdir, i)
             face = ImgFace(path)
+            face.rotation = -90
             node.add_face(face, column=1)
 
     # Draw path on tree

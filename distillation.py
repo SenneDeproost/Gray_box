@@ -2,6 +2,8 @@ from Distillate import *
 import gym
 from stable_baselines3.common.cmd_util import make_atari_env
 import envlist
+import cv2
+import matplotlib.pyplot as plt
 
 def distillation(profile, model_from, model_to, env, alg, distill_steps, epochs):
     from structures.SoftDecisionTree.sdt.model import SoftDecisionTree
@@ -34,11 +36,10 @@ def distillation(profile, model_from, model_to, env, alg, distill_steps, epochs)
 
 
 def record_experiences(profile, env_name, alg, steps, model_name):
-    from stable_baselines3.common.cmd_util import make_atari_env
+    from stable_baselines3.common.atari_wrappers import AtariWrapper
     recorded_obs = Distillate(profile, model_name, type='obs')
     recorded_act = Distillate(profile, model_name, type='act')
 
-    # Preperation
     model = []
 
     alg = alg.upper()
@@ -49,21 +50,36 @@ def record_experiences(profile, env_name, alg, steps, model_name):
     model_path = 'profiles/{}/models/{}'.format(profile, model_name)
     ex = 'model.append({}.load(model_path, env=env, verbose=1))'.format(alg)
     log('Playing model {} in environment {}.'.format(model_name, env_name))
+
     if env_name in envlist.atari:
-        env = make_atari_env(env_name)
+        env = AtariWrapper(gym.make(env_name))
+        #env = gym.make(env_name) #!!!!!
+
     exec(ex, locals())
     log('Model loaded.')
     model = model[0]
 
+    # Grayscale preprocess
+    def preprocess(observation, thrshld):
+        observation = observation.reshape(84, 84)
+        observation = cv2.cvtColor(observation, cv2.COLOR_GRAY2BGR)
+        observation = cv2.cvtColor(observation, cv2.COLOR_BGR2GRAY)
+        observation, th1 = cv2.threshold(observation, thrshld, 255, cv2.THRESH_BINARY)
+        plt.imshow(th1, cmap='gray')
+        plt.show()
+        exit()
+        return th1
+
     # Play until the end
     log('Generating dataset.')
     obs = env.reset()
+
     stps = int(steps)
     for i in range(stps):
         action, _states = model.predict(obs, deterministic=True)
         obs, reward, done, info = env.step(action)
         if i % 15 in [0, 1, 2, 3]:
-            recorded_obs.dataset.append(obs)
+            recorded_obs.dataset.append(preprocess(obs, envlist.threshold[env_name]))
             recorded_act.dataset.append(action)
         if i % 1000 == 0:
             print('At step {}.'.format(i))

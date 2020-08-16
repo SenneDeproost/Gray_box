@@ -5,6 +5,7 @@ import torch
 from Distillate import *
 import numpy as np
 
+
 class Trainer:
 
     def __init__(self, type):
@@ -65,13 +66,21 @@ class Trainer:
         act = Distillate(profile, model_name, 'act')
         obs.load('./profiles/{}/datasets/{}.obs'.format(profile, model_name))
         act.load('./profiles/{}/datasets/{}.act'.format(profile, model_name))
-        obs = torch.from_numpy(np.array(obs.dataset))
-        act = torch.from_numpy(np.array(act.dataset))
+        #obs.load("./profiles/Senne/datasets/d_obs.pkl.gz")
+        #act.load("./profiles/Senne/datasets/actions.pkl.gz")
+        obs = torch.from_numpy(np.array(obs.dataset[0:]))
+        act = torch.from_numpy(np.array(act.dataset[0:]))
+
+        print(obs.shape)
+        print(act.shape)
+        print(obs[0])
+        print(act[0])
+
 
         # Get shapes input and output
-        i_w = obs.shape[1]
-        i_h = obs.shape[2]
-        i_size = i_w * i_h
+        #i_w = obs.shape[1]
+        #i_h = obs.shape[2]
+        #i_size = i_w * i_h
 
 
         # Transforms
@@ -81,11 +90,26 @@ class Trainer:
         target_transform = transforms.Lambda(
             lambda t: torch.as_tensor(torch.nn.functional.one_hot(torch.tensor(t), num_classes=self.args.output_dim), dtype=torch.float))
 
+        #obs = torch.flatten(obs, start_dim=1).to(torch.float)
+        #act = torch.nn.functional.one_hot(act.to(torch.int64), self.args.output_dim).flatten(start_dim=1).to(torch.float)
         obs = torch.flatten(obs, start_dim=1).to(torch.float)
-        act = torch.nn.functional.one_hot(act.to(torch.int64), self.args.output_dim).flatten(start_dim=1).to(torch.float)
+        act = torch.flatten(act, start_dim=1).to(torch.float)
 
         dataset = TensorDataset(obs, act)
-        trainset = TensorDataset(obs, act)
+        trainset = TensorDataset(obs[0:100], act[0:100])
+
+        dataset = dataset
+        print(dataset)
+        #trainset = trainset[0:1]
+
+
+
+        # t = dataset[0][0]
+        # import matplotlib.pyplot as plt
+        # t = t.reshape(84, 84)
+        # plt.imshow(t, cmap='gray')
+        # plt.show()
+        # exit()
 
         train_loader = DataLoader(dataset, batch_size=self.args.batch_size, shuffle=True, **kwargs)
         test_loader = DataLoader(trainset, batch_size=self.args.batch_size, shuffle=True, **kwargs)

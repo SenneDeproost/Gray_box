@@ -2,7 +2,6 @@ import util
 from util import log
 import compress_pickle
 
-
 class Distillate:
     def __init__(self, profile, model, type):
         self.profile = profile

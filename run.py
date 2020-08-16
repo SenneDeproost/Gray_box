@@ -41,13 +41,14 @@ def play(profile, env_name, alg, model_name):
 
 # Create a new model and train it.
 def train_new(profile, env_name, alg, stps, policy_type='"CnnPolicy"'):
+    from stable_baselines3.common.atari_wrappers import AtariWrapper
     # Preperation
     model = []
 
     log('Training new model with variables: \n  environment: {}\n  algorithm: {}\n  steps: {} \n  policy type: {}'.format(env_name, alg, stps, policy_type))
     alg = alg.upper()
     if env_name in envlist.atari:
-        env = make_atari_env(env_name)
+        env = AtariWrapper(gym.make(env_name))
     impo = 'from stable_baselines3 import {}'.format(alg)
     log('Loading learning algorithm.')
     exec(impo)

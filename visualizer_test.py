@@ -42,7 +42,7 @@ import matplotlib.pyplot as plt
 q = Visualizer('SDT')
 q.load_model('./.working/best.pt', 'pong_args.py')
 q.build_tree()
-q.render_nodes(84, 84)
+#q.render_nodes(75, 80)
 q.add_node_visuals()
 q.show()
 exit()
@@ -55,7 +55,7 @@ args.device = torch.device('cpu')
 
 
 d = SoftDecisionTree(args)
-d.load_state_dict(torch.load('best.pt', map_location=torch.device(args.device)))
+d.load_state_dict(torch.load('./.working/best.pt', map_location=torch.device(args.device)))
 d.eval()
 
 print(d.weights.shape)
