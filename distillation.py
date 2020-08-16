@@ -59,17 +59,6 @@ def record_experiences(profile, env_name, alg, steps, model_name):
     log('Model loaded.')
     model = model[0]
 
-    # Grayscale preprocess
-    def preprocess(observation, thrshld):
-        observation = observation.reshape(84, 84)
-        observation = cv2.cvtColor(observation, cv2.COLOR_GRAY2BGR)
-        observation = cv2.cvtColor(observation, cv2.COLOR_BGR2GRAY)
-        observation, th1 = cv2.threshold(observation, thrshld, 255, cv2.THRESH_BINARY)
-        plt.imshow(th1, cmap='gray')
-        plt.show()
-        exit()
-        return th1
-
     # Play until the end
     log('Generating dataset.')
     obs = env.reset()
@@ -79,7 +68,7 @@ def record_experiences(profile, env_name, alg, steps, model_name):
         action, _states = model.predict(obs, deterministic=True)
         obs, reward, done, info = env.step(action)
         if i % 15 in [0, 1, 2, 3]:
-            recorded_obs.dataset.append(preprocess(obs, envlist.threshold[env_name]))
+            recorded_obs.dataset.append(util.preprocess_obs(obs, envlist.threshold[env_name]))
             recorded_act.dataset.append(action)
         if i % 1000 == 0:
             print('At step {}.'.format(i))

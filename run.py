@@ -41,14 +41,22 @@ def play(profile, env_name, alg, model_name):
 
 # Create a new model and train it.
 def train_new(profile, env_name, alg, stps, policy_type='"CnnPolicy"'):
-    from stable_baselines3.common.atari_wrappers import AtariWrapper
+    from stable_baselines3.common.atari_wrappers import WarpFrame
     # Preperation
     model = []
 
     log('Training new model with variables: \n  environment: {}\n  algorithm: {}\n  steps: {} \n  policy type: {}'.format(env_name, alg, stps, policy_type))
     alg = alg.upper()
     if env_name in envlist.atari:
-        env = AtariWrapper(gym.make(env_name))
+        height, width = (210, 160)
+        env = WarpFrame(gym.make(env_name), width=width, height=height)
+        obs = env.reset()
+        # env.render()
+        # obs = util.preprocess(obs, thrshld=envlist.threshold[env_name], width=width, height=height)
+        # import matplotlib.pyplot as plt
+        # plt.imshow(obs, cmap='gray')
+        # plt.show()
+        # exit()
     impo = 'from stable_baselines3 import {}'.format(alg)
     log('Loading learning algorithm.')
     exec(impo)
