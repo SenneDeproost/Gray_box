@@ -3,6 +3,7 @@ import json
 import time
 import os
 import cv2
+import numpy as np
 
 
 LOGFILE = None
@@ -71,12 +72,14 @@ def init_info(profile):
 
 # Preprocess the observation
     # Grayscale preprocess
-def preprocess(observation, thrshld, width, height):
+def preprocess_obs(observation, thrshld, width, height):
     observation = observation.reshape(height, width)
     observation = cv2.cvtColor(observation, cv2.COLOR_GRAY2BGR)
     observation = cv2.cvtColor(observation, cv2.COLOR_BGR2GRAY)
     observation, th1 = cv2.threshold(observation, thrshld, 255, cv2.THRESH_BINARY)
+    #res = [1 if x == 255 else x for x in th1]
+    res = np.where(th1==255, 1, th1)
     #plt.imshow(th1, cmap='gray')
     #plt.show()
     #exit()
-    return th1
+    return res

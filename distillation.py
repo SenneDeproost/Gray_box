@@ -37,6 +37,7 @@ def distillation(profile, model_from, model_to, env, alg, distill_steps, epochs)
 
 def record_experiences(profile, env_name, alg, steps, model_name):
     from stable_baselines3.common.atari_wrappers import AtariWrapper
+    from baselines.common.retro_wrappers import WarpFrame
     recorded_obs = Distillate(profile, model_name, type='obs')
     recorded_act = Distillate(profile, model_name, type='act')
 
@@ -52,8 +53,18 @@ def record_experiences(profile, env_name, alg, steps, model_name):
     log('Playing model {} in environment {}.'.format(model_name, env_name))
 
     if env_name in envlist.atari:
-        env = AtariWrapper(gym.make(env_name))
-        #env = gym.make(env_name) #!!!!!
+        height, width = (105, 80)
+        #height, width = (84, 84)
+        # env = EpisodicLifeEnv(gym.make(env_name))
+        # env = AtariWrapper(gym.make(env_name))
+        env = WarpFrame(gym.make(env_name), width=width, height=height, grayscale=True)
+        obs = env.reset()
+        # env.render()
+        # obs = util.preprocess(obs, thrshld=envlist.threshold[env_name], width=width, height=height)
+        # import matplotlib.pyplot as plt
+        # plt.imshow(obs, cmap='gray')
+        # plt.show()
+        # exit()
 
     exec(ex, locals())
     log('Model loaded.')
@@ -67,8 +78,13 @@ def record_experiences(profile, env_name, alg, steps, model_name):
     for i in range(stps):
         action, _states = model.predict(obs, deterministic=True)
         obs, reward, done, info = env.step(action)
-        if i % 15 in [0, 1, 2, 3]:
-            recorded_obs.dataset.append(util.preprocess_obs(obs, envlist.threshold[env_name]))
+        if i % 8 in [0, 1, 2, 3]:
+            rec_obs = util.preprocess_obs(obs, envlist.threshold[env_name], width=width, height=height)
+            #rec_obs = obs
+            recorded_obs.dataset.append(rec_obs)
+            #import matplotlib.pyplot as plt
+            #plt.imshow(rec_obs.reshape(84, 84), cmap='gray')
+            #plt.show()
             recorded_act.dataset.append(action)
         if i % 1000 == 0:
             print('At step {}.'.format(i))

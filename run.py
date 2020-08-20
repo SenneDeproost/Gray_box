@@ -49,10 +49,10 @@ def train_new(profile, env_name, alg, stps, policy_type='"CnnPolicy"'):
     log('Training new model with variables: \n  environment: {}\n  algorithm: {}\n  steps: {} \n  policy type: {}'.format(env_name, alg, stps, policy_type))
     alg = alg.upper()
     if env_name in envlist.atari:
-        height, width = (210, 160)
+        height, width = (105, 80)
         #env = EpisodicLifeEnv(gym.make(env_name))
-        #env = AtariWrapper(gym.make(env_name))
-        env = WarpFrame(gym.make(env_name), width=width, height=height, grayscale=True)
+        env = AtariWrapper(gym.make(env_name))
+        #env = WarpFrame(gym.make(env_name), width=width, height=height, grayscale=True)
         obs = env.reset()
         # env.render()
         # obs = util.preprocess(obs, thrshld=envlist.threshold[env_name], width=width, height=height)

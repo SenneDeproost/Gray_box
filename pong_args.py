@@ -3,9 +3,9 @@ import pickle
 
 parser = argparse.ArgumentParser(description='Soft Decision Tree')
 # Model args
-parser.add_argument('--batch-size', type=int, default=32, help='input batch size for training (default: 64)')
-parser.add_argument('--input-dim', type=int, default=210*160, help='input dimension size(default: 784 --> 7056)')
-parser.add_argument('--output-dim', type=int, default=2, help='output dimension size (default: 10)')
+parser.add_argument('--batch-size', type=int, default=64, help='input batch size for training (default: 64)')
+parser.add_argument('--input-dim', type=int, default=105*80, help='input dimension size(default: 784 --> 7056)')
+parser.add_argument('--output-dim', type=int, default=6, help='output dimension size (default: 10)')
 parser.add_argument('--depth', type=int, default=5, help='Depth of tree (default: 5)')
 parser.add_argument('--lmbda', type=float, default=0.1, help='penalty strength rate (default: 0.1)')
 # Training args

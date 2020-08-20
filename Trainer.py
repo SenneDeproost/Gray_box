@@ -71,10 +71,13 @@ class Trainer:
         obs = torch.from_numpy(np.array(obs.dataset[0:]))
         act = torch.from_numpy(np.array(act.dataset[0:]))
 
-        print(obs.shape)
-        print(act.shape)
-        print(obs[0])
-        print(act[0])
+        # print(obs.shape)
+        # print(act.shape)
+        # print(obs[0])
+        # print(act[0])
+        # import matplotlib.pyplot as plt
+        # plt.imshow(obs[0], cmap='gray')
+        # plt.show()
 
 
         # Get shapes input and output
@@ -90,21 +93,20 @@ class Trainer:
         target_transform = transforms.Lambda(
             lambda t: torch.as_tensor(torch.nn.functional.one_hot(torch.tensor(t), num_classes=self.args.output_dim), dtype=torch.float))
 
-        #obs = torch.flatten(obs, start_dim=1).to(torch.float)
-        #act = torch.nn.functional.one_hot(act.to(torch.int64), self.args.output_dim).flatten(start_dim=1).to(torch.float)
         obs = torch.flatten(obs, start_dim=1).to(torch.float)
-        act = torch.flatten(act, start_dim=1).to(torch.float)
+        act = torch.nn.functional.one_hot(act.to(torch.int64), self.args.output_dim).flatten(start_dim=1).to(torch.float)
+        #obs = torch.flatten(obs, start_dim=1).to(torch.float)
+        #act = torch.flatten(act, start_dim=1).to(torch.float)
 
         dataset = TensorDataset(obs, act)
-        trainset = TensorDataset(obs[0:100], act[0:100])
-
-        dataset = dataset
-        print(dataset)
-        #trainset = trainset[0:1]
-
+        trainset = TensorDataset(obs[-50:], act[-50:])
 
 
         # t = dataset[0][0]
+        # torch.set_printoptions(profile="full")
+        # from pprint import pprint
+        # pprint(t)
+        # exit()
         # import matplotlib.pyplot as plt
         # t = t.reshape(84, 84)
         # plt.imshow(t, cmap='gray')
