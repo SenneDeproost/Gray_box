@@ -52,8 +52,9 @@ def train_new(profile, env_name, alg, stps, policy_type='"CnnPolicy"'):
         height, width = (105, 80)
         #env = EpisodicLifeEnv(gym.make(env_name))
         #env = AtariWrapper(gym.make(env_name))
-        env = WarpFrame(gym.make(env_name), width=width, height=height, grayscale=True)
-        obs = env.reset()
+        #env = WarpFrame(gym.make(env_name), width=width, height=height, grayscale=True)
+        env = util.ThresholdWarpWrapper(gym.make(env_name), envlist.threshold[env_name], width, height)
+        env.reset()
         # env.render()
         # obs = util.preprocess(obs, thrshld=envlist.threshold[env_name], width=width, height=height)
         # import matplotlib.pyplot as plt

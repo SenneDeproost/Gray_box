@@ -4,6 +4,8 @@ import time
 import os
 import cv2
 import numpy as np
+import gym
+from baselines.common.retro_wrappers import WarpFrame
 
 
 LOGFILE = None
@@ -72,16 +74,28 @@ def init_info(profile):
 
 # Preprocess the observation
     # Grayscale preprocess
-def preprocess_obs(observation, thrshld, width, height):
-    observation = observation.reshape(height, width)
+def preprocess_obs(observation, thrshld):
     observation = cv2.cvtColor(observation, cv2.COLOR_GRAY2BGR)
     observation = cv2.cvtColor(observation, cv2.COLOR_BGR2GRAY)
-    #observation, th1 = cv2.threshold(observation, thrshld, 255, cv2.THRESH_TOZERO)
-    th1 = cv2.adaptiveThreshold(observation, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, \
-                                cv2.THRESH_BINARY, 11, 2)
+    observation, th1 = cv2.threshold(observation, thrshld, 255, cv2.THRESH_BINARY)
     #res = [1 if x == 255 else x for x in th1]
     #res = np.where(th1==255, 1, th1)
     #plt.imshow(th1, cmap='gray')
     #plt.show()
     #exit()
     return th1
+
+# Wrapper for the Gym Atari environments
+class ThresholdWarpWrapper(gym.Wrapper):
+    def __init__(self, env, threshold, width, height):
+        gym.Wrapper.__init__(self, WarpFrame(env, height=height, width=width))
+        self.threshold = threshold
+        self.width = width
+        self.height = height
+
+    def step(self, action):
+        obs, reward, done, info = self.env.step(action)
+        obs = preprocess_obs(obs, thrshld=self.threshold)
+        obs = obs.reshape(self.height, self.width, 1)
+        return obs, reward, done, info
+

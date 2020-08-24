@@ -57,7 +57,8 @@ def record_experiences(profile, env_name, alg, steps, model_name):
         #height, width = (84, 84)
         # env = EpisodicLifeEnv(gym.make(env_name))
         # env = AtariWrapper(gym.make(env_name))
-        env = WarpFrame(gym.make(env_name), width=width, height=height, grayscale=True)
+        #env = WarpFrame(gym.make(env_name), width=width, height=height, grayscale=True)
+        env = util.ThresholdWarpWrapper(gym.make(env_name), envlist.threshold[env_name], width, height)
         obs = env.reset()
         # env.render()
         # obs = util.preprocess(obs, thrshld=envlist.threshold[env_name], width=width, height=height)
@@ -79,8 +80,8 @@ def record_experiences(profile, env_name, alg, steps, model_name):
         action, _states = model.predict(obs, deterministic=True)
         obs, reward, done, info = env.step(action)
         if i % 8 in [0, 1, 2, 3]:
-            rec_obs = util.preprocess_obs(obs, envlist.threshold[env_name], width=width, height=height)
-            #rec_obs = obs
+            #rec_obs = util.preprocess_obs(obs, envlist.threshold[env_name], width=width, height=height)
+            rec_obs = obs
             recorded_obs.dataset.append(rec_obs)
             #import matplotlib.pyplot as plt
             #plt.imshow(rec_obs.reshape(84, 84), cmap='gray')
