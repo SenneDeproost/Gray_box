@@ -76,10 +76,12 @@ def preprocess_obs(observation, thrshld, width, height):
     observation = observation.reshape(height, width)
     observation = cv2.cvtColor(observation, cv2.COLOR_GRAY2BGR)
     observation = cv2.cvtColor(observation, cv2.COLOR_BGR2GRAY)
-    observation, th1 = cv2.threshold(observation, thrshld, 255, cv2.THRESH_BINARY)
+    #observation, th1 = cv2.threshold(observation, thrshld, 255, cv2.THRESH_TOZERO)
+    th1 = cv2.adaptiveThreshold(observation, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, \
+                                cv2.THRESH_BINARY, 11, 2)
     #res = [1 if x == 255 else x for x in th1]
-    res = np.where(th1==255, 1, th1)
+    #res = np.where(th1==255, 1, th1)
     #plt.imshow(th1, cmap='gray')
     #plt.show()
     #exit()
-    return res
+    return th1

@@ -14,11 +14,11 @@ from stable_baselines3 import PPO
 import util
 import matplotlib.pyplot as plt
 
-env_name = 'PongNoFrameskip-v4'
-height, width = (210, 160)
+env_name = 'SpaceInvaders-v0'
+height, width = (105, 80)
 env = WarpFrame(gym.make(env_name), width=width, height=height, grayscale=True)
 profile = 'Senne'
-model_name = env_name + "_PPO_3000000_0"
+model_name = env_name + "_PPO_20000000_0"
 model = PPO.load("./profiles/{}/models/{}.zip".format(profile, model_name))
 
 obs = env.reset()
@@ -29,7 +29,7 @@ obs = env.reset()
 for i in range(100000):
     action, _states = model.predict(obs)
     obs, reward, done, info = env.step(action)
-    #obs = util.preprocess_obs(obs, thrshld=envlist.threshold[env_name], width=160, height=210)
+    #obs = util.preprocess_obs(obs, thrshld=envlist.threshold[env_name], width=80, height=105)
     env.render()
     if done:
         env.close()

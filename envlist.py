@@ -5,3 +5,4 @@ threshold['PongNoFrameskip-v4'] = 110
 threshold['SpaceInvaders-v0'] = 1
 threshold['MsPacman-v0'] = 58
 threshold['Enduro-v0'] = 50
+threshold['BreakoutNoFrameskip-v4'] = 50
