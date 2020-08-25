@@ -207,4 +207,4 @@ profiles/
 *.DS_Store
 
 test.py
-./.working/*
+.working/

@@ -20,7 +20,8 @@ def play(profile, env_name, alg, model_name):
     ex = 'model.append({}.load(model_path, env=env, verbose=1))'.format(alg)
     log('Playing model {} in environment {}.'.format(model_name, env_name))
     if env_name in envlist.atari:
-        env = make_atari_env(env_name)
+        env = gym.make(env_name)
+        env = util.ThresholdWarpWrapper(env, 100, 80, envlist.threshold[env_name])
     exec(ex, locals())
 
     log('Model loaded.')
@@ -66,18 +67,20 @@ def train_new(profile, env_name, alg, stps, policy_type='"CnnPolicy"'):
     exec(impo)
 
     log('Algorithm {} loaded.'.format(alg))
-    ex = 'model.append({}({}, env, verbose=2))'.format(alg, policy_type) # Mlp- or CnnPolicy.
+    tb_log = '"./profiles/{}/tensorboard"'.format(profile)
+    ex = 'model.append({}({}, env, verbose=2, tensorboard_log={}))'.format(alg, policy_type, str(tb_log)) # Mlp- or CnnPolicy.
     exec(ex, locals())
 
     log('Model loaded.')
     model = model[0]
 
+    model_name = util.new_model_name(profile, env_name, alg, stps)
+
     # Learn policy.
     log('Start training policy.')
-    model.learn(total_timesteps=stps)
+    model.learn(total_timesteps=stps, tb_log_name=model_name)
 
     # Save model.
-    model_name = util.new_model_name(profile, env_name, alg, stps)
     model_path = 'profiles/{}/models/{}'.format(profile, model_name)
     log('Saving model to {}'.format(model_name))
     model.save(model_path)

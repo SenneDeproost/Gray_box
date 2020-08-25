@@ -54,18 +54,8 @@ def record_experiences(profile, env_name, alg, steps, model_name):
 
     if env_name in envlist.atari:
         height, width = (105, 80)
-        #height, width = (84, 84)
-        # env = EpisodicLifeEnv(gym.make(env_name))
-        # env = AtariWrapper(gym.make(env_name))
-        #env = WarpFrame(gym.make(env_name), width=width, height=height, grayscale=True)
         env = util.ThresholdWarpWrapper(gym.make(env_name), envlist.threshold[env_name], width, height)
-        obs = env.reset()
-        # env.render()
-        # obs = util.preprocess(obs, thrshld=envlist.threshold[env_name], width=width, height=height)
-        # import matplotlib.pyplot as plt
-        # plt.imshow(obs, cmap='gray')
-        # plt.show()
-        # exit()
+        env.reset()
 
     exec(ex, locals())
     log('Model loaded.')
