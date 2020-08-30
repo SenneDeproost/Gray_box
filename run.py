@@ -52,7 +52,8 @@ def train_new(profile, env_name, alg, stps, policy_type='"CnnPolicy"'):
     if env_name in envlist.atari:
         height, width = (105, 80)
         #env = EpisodicLifeEnv(gym.make(env_name))
-        #env = AtariWrapper(gym.make(env_name))
+        from stable_baselines3.common.monitor import Monitor
+        #env = Monitor(AtariWrapper(gym.make(env_name)))
         #env = WarpFrame(gym.make(env_name), width=width, height=height, grayscale=True)
         env = util.ThresholdWarpWrapper(gym.make(env_name), envlist.threshold[env_name], width, height)
         env.reset()
