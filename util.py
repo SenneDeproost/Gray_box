@@ -79,13 +79,13 @@ def init_info(profile):
 def preprocess_obs(observation, thrshld):
     #observation = cv2.cvtColor(observation, cv2.COLOR_GRAY2BGR)
     #observation = cv2.cvtColor(observation, cv2.COLOR_BGR2GRAY)
-    ##observation, th1 = cv2.threshold(observation, thrshld, 255, cv2.THRESH_BINARY)
+    observation, th1 = cv2.threshold(observation, thrshld, 255, cv2.THRESH_BINARY)
     #res = [1 if x == 255 else x for x in th1]
-    ##res = np.where(th1==255, 1, th1)
+    res = np.where(th1==255, 1, th1)
     #plt.imshow(th1, cmap='gray')
     #plt.show()
     #exit()
-    return observation
+    return res
 
 # Wrapper for the Gym Atari environments
 from stable_baselines3.common.vec_env.vec_transpose import VecTransposeImage
