@@ -52,7 +52,7 @@ class Trainer:
 
         if self.type == 'ANT':
             # Create ANT
-            model = AdaptiveNeuralTree(args=args, tree_modules=[], tree_struct=[])
+            model = AdaptiveNeuralTree(args)
             self.model = model
             self.args = args
 
@@ -128,6 +128,11 @@ class Trainer:
 
         model = self.model
 
-        for epoch in range(1, self.args.epochs + 1):
-            model.train_(train_loader, epoch)
-            model.test_(test_loader, epoch)
+        if self.type == 'SDT':
+
+            for epoch in range(1, self.args.epochs + 1):
+                model.train_(train_loader, epoch)
+                model.test_(test_loader, epoch)
+
+        if self.type == 'ANT':
+            self.model.grow_ant_nodewise(train_loader, train_loader, train_loader)

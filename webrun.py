@@ -22,8 +22,13 @@ def load_session(profile, distillate, alg, environment, policy_type='"MlpPolicy"
 
     ## Loading game
     if environment in envlist.atari:
-        env = make_atari_env(environment)
-    env.reset()
+        height, width = (105, 80)
+        # env = EpisodicLifeEnv(gym.make(env_name))
+        from stable_baselines3.common.monitor import Monitor
+        # env = Monitor(AtariWrapper(gym.make(env_name)))
+        # env = WarpFrame(gym.make(env_name), width=width, height=height, grayscale=True)
+        env = util.ThresholdWarpWrapper(gym.make(environment), envlist.threshold[environment], width, height)
+        env.reset()
 
     model = []
     alg = alg.upper()

@@ -26,12 +26,15 @@ import matplotlib.pyplot as plt
 # w = list(model.tree_modules[15].classifier.fc.parameters())[1]
 # print(w)
 
-# q = Visualizer("ANT")
-# q.load_model("model.pth")
-# q.load_structure('tree_structures.json')
-# q.build_tree()
-# #q.render_nodes(28, 28)
-# q.add_node_visuals()
+q = Visualizer("SDT")
+q.load_model("./.working/best.pt", 'mspacman_args.py')
+#q.load_structure('tree_structures.json')
+q.build_tree()
+#q.render_nodes(105, 80)
+q.add_node_visuals()
+q.save('MsPacman_SDT_test')
+q.show()
+exit()
 # q.draw_path([0, 1, 3, 8, 14])
 # q.show()
 # q.draw_path([0, 2, 5, 11])
@@ -39,13 +42,13 @@ import matplotlib.pyplot as plt
 # print(q.tree)
 
 
-q = Visualizer('SDT')
-q.load_model('./.working/best.pt', 'pong_args.py')
-q.build_tree()
-q.render_nodes(105, 80)
-q.add_node_visuals()
-q.show()
-exit()
+# q = Visualizer('SDT')
+# q.load_model('./.working/best.pt', 'pong_args.py')
+# q.build_tree()
+# #q.render_nodes(105, 80)
+# q.add_node_visuals()
+# q.save('Pong_SDT_test')
+# exit()
 
 
 

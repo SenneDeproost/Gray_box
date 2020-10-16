@@ -76,13 +76,18 @@ def train_new(profile, env_name, alg, stps, policy_type='"CnnPolicy"'):
     model = model[0]
 
     model_name = util.new_model_name(profile, env_name, alg, stps)
+    model_path = 'profiles/{}/models/{}'.format(profile, model_name)
+    print(model_name)
+
+    # Create empty zip file for representing the model in parallel model training
+    with open(model_path + ".zip", "w+") as f:
+        f.close()
 
     # Learn policy.
     log('Start training policy.')
     model.learn(total_timesteps=stps, tb_log_name=model_name)
 
     # Save model.
-    model_path = 'profiles/{}/models/{}'.format(profile, model_name)
     log('Saving model to {}'.format(model_name))
     model.save(model_path)
     log('Model saved.')
