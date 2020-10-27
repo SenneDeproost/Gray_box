@@ -6,6 +6,9 @@ import torch
 from Distillate import *
 import numpy as np
 
+from torchvision import datasets, transforms
+from ops import ChunkSampler
+
 
 class Trainer:
 
@@ -22,7 +25,7 @@ class Trainer:
             pass
 
     # Create new model
-    def new_model(self, args_file, args_dict=None):
+    def new_model(self, args_file, args_dict={}):
 
         # Import args file
         import importlib.util
@@ -30,8 +33,9 @@ class Trainer:
         foo = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(foo)
         parser = foo.parser
-        args = parser.parse_args()
+        args, unknown = parser.parse_known_args()
         torch.manual_seed(args.seed)
+
 
         # CUDA
         args.cuda = not args.no_cuda and torch.cuda.is_available()
@@ -56,8 +60,6 @@ class Trainer:
             self.model = model
             self.args = args
 
-
-
         if self.type == 'SDT':
             # Create SDT
             model = SoftDecisionTree(args)
@@ -76,55 +78,33 @@ class Trainer:
         act = Distillate(profile, model_name, 'act')
         obs.load('./profiles/{}/datasets/{}.obs'.format(profile, model_name))
         act.load('./profiles/{}/datasets/{}.act'.format(profile, model_name))
-        #obs.load("./profiles/Senne/datasets/d_obs.pkl.gz")
-        #act.load("./profiles/Senne/datasets/actions.pkl.gz")
-        obs = torch.from_numpy(np.array(obs.dataset[0:]))
-        act = torch.from_numpy(np.array(act.dataset[0:]))
-
-        # print(obs.shape)
-        # print(act.shape)
-        # print(obs[0])
-        # print(act[0])
-        # import matplotlib.pyplot as plt
-        # plt.imshow(obs[0], cmap='gray')
-        # plt.show()
+        obs = torch.from_numpy(np.array(obs.dataset))
+        act = torch.from_numpy(np.array(act.dataset))
 
 
-        # Get shapes input and output
-        #i_w = obs.shape[1]
-        #i_h = obs.shape[2]
-        #i_size = i_w * i_h
 
-
-        # Transforms
-        data_transform = transforms.Compose(
-            [transforms.ToTensor(), transforms.Lambda(torch.flatten)])
-
-        target_transform = transforms.Lambda(
-            lambda t: torch.as_tensor(torch.nn.functional.one_hot(torch.tensor(t), num_classes=self.args.output_dim), dtype=torch.float))
+        n_data = len(obs)
+        n_valid = 0.1 * n_data
+        n_test = 0.05 * n_data
+        idx_test = int(n_data - n_test)
+        idx_valid = int(idx_test - n_valid)
 
         obs = torch.flatten(obs, start_dim=1).to(torch.float)
-        act = torch.nn.functional.one_hot(act.to(torch.int64), self.args.output_dim).flatten(start_dim=1).to(torch.float)
-        #obs = torch.flatten(obs, start_dim=1).to(torch.float)
-        #act = torch.flatten(act, start_dim=1).to(torch.float)
+        if self.type == 'SDT':
+            act = torch.nn.functional.one_hot(act.to(torch.int64)).flatten(start_dim=1).to(torch.float)
+        elif self.type == 'ANT':
+            act = act.to(torch.float)
 
-        dataset = TensorDataset(obs, act)
-        trainset = TensorDataset(obs[-50:], act[-50:])
+        trainset = TensorDataset(obs[:idx_valid], act[:idx_valid])
+        validset = TensorDataset(obs[idx_valid + 1: idx_test], act[idx_valid + 1:idx_test])
+        testset = TensorDataset(obs[idx_test + 1:], act[idx_test + 1:])
 
 
-        # t = dataset[0][0]
-        # torch.set_printoptions(profile="full")
-        # from pprint import pprint
-        # pprint(t)
-        # exit()
-        # import matplotlib.pyplot as plt
-        # t = t.reshape(84, 84)
-        # plt.imshow(t, cmap='gray')
-        # plt.show()
-        # exit()
 
-        train_loader = DataLoader(dataset, batch_size=self.args.batch_size, shuffle=True, **kwargs)
-        test_loader = DataLoader(trainset, batch_size=self.args.batch_size, shuffle=True, **kwargs)
+        train_loader = DataLoader(trainset, batch_size=self.args.batch_size, shuffle=True, **kwargs)
+        valid_loader = DataLoader(validset, batch_size=self.args.batch_size, shuffle=True, **kwargs)
+        test_loader = DataLoader(testset, batch_size=self.args.batch_size, shuffle=True, **kwargs)
+
 
         model = self.model
 
@@ -135,4 +115,5 @@ class Trainer:
                 model.test_(test_loader, epoch)
 
         if self.type == 'ANT':
-            self.model.grow_ant_nodewise(train_loader, train_loader, train_loader)
+            self.model.initialize(train_loader, valid_loader, test_loader, n_data, n_valid)
+            self.model.grow_ant_nodewise()

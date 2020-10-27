@@ -9,8 +9,16 @@ from Trainer import *
 
 from structures.AdaptiveNeuralTrees.ANT import AdaptiveNeuralTree
 
+t = Trainer('ANT')
+args = dict()
+t.new_model('pong_args_ant.py', args)
+t.train('best', 'PongNoFrameskip-v4_PPO_20000000_1_500000')
+exit()
+
 t = Trainer('SDT')
 args = dict()
-t.new_model('mspacman_args.py', args)
-t.train('best', 'MsPacman-v0_PPO_20000000_1_100000')
+t.new_model('pong_args.py', args)
+t.train('best', 'PongNoFrameskip-v4_PPO_20000000_1_40000')
 exit()
+
+

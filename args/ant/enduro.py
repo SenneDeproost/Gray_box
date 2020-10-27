@@ -21,10 +21,10 @@ parser.add_argument('--momentum', type=float, default=0.5, metavar='M', help='SG
 parser.add_argument('--valid_ratio', '-vr', dest='valid_ratio', type=float, default=0.1, metavar='LR', help='validation set ratio')
 
 parser.add_argument('--criteria', default='avg_valid_loss', help='growth criteria')
-parser.add_argument('--epochs_node', type=int, default=500, metavar='N', help='max number of epochs to train per node during the growth phase')
-parser.add_argument('--epochs_finetune', type=int, default=100, metavar='N', help='number of epochs for the refinement phase')
+parser.add_argument('--epochs_node', type=int, default=5, metavar='N', help='max number of epochs to train per node during the growth phase')
+parser.add_argument('--epochs_finetune', type=int, default=50, metavar='N', help='number of epochs for the refinement phase')
 parser.add_argument('--epochs_patience', type=int, default=5, metavar='N', help='number of epochs to be waited without improvement at each node during the growth phase')
-parser.add_argument('--maxdepth', type=int, default=10, help='maximum depth of tree')
+parser.add_argument('--maxdepth', type=int, default=50, help='maximum depth of tree')
 parser.add_argument('--finetune_during_growth', action='store_true', default=False, help='refine the tree globally during the growth phase')
 parser.add_argument('--epochs_finetune_node', type=int, default=50, metavar='N', help='number of epochs to perform global refinement at each node during the growth phase')
 
@@ -53,12 +53,12 @@ parser.add_argument('--visualise_split', action='store_true', help='visuliase ho
 
 
 # Extra
-parser.add_argument('--input-dim', type=int, default=105*80, help='input dimension size(default: 784 --> 7056)')
-parser.add_argument('--output-dim', type=int, default=6, help='output dimension size (default: 10)')
-parser.add_argument('--depth', type=int, default=5 , help='Depth of tree (default: 5)')
+parser.add_argument('--input-dim', type=int, default=80*105, help='input dimension size(default: 784 --> 7056)')
+parser.add_argument('--output-dim', type=int, default=1, help='output dimension size (default: 10)')
+parser.add_argument('--depth', type=int, default=10 , help='Depth of tree (default: 5)')
 parser.add_argument('--lmbda', type=float, default=0.1, help='penalty strength rate (default: 0.1)')
 parser.add_argument('--input_nc', type=int, default=1, help='Number of chanels in input')
 parser.add_argument('--input_width', type=int, default=80, help='Input width')
 parser.add_argument('--input_height', type=int, default=105, help='Input height')
-parser.add_argument('--classes', default=(0, 1, 2, 3, 4, 5))
-parser.add_argument('--no_classes', default=6)
+parser.add_argument('--classes', default=(0, 1, 2, 3, 4, 5, 6, 7, 8))
+parser.add_argument('--no_classes', default=9)

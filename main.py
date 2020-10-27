@@ -133,7 +133,13 @@ def commandParser(command, params):
     # - GENERATE - #
     # Generate a new dataset for distillation from model.
     elif command == 'generate':
-        if n_params == 5:
+        if n_params == 3:
+            model = params[1]
+            env, alg, _, _ = model.split('_')
+            profile = params[0]
+            steps = params[2]
+            dis.record_experiences(profile, env, alg, steps, model)
+        elif n_params == 5:
             profile, env, alg, model, steps = params
             dis.record_experiences(profile, env, alg, steps, model)
         else:
@@ -141,19 +147,10 @@ def commandParser(command, params):
 
     # - TRAIN - #
     elif command == 'train': # /// Todo: implement train_from_distillate
-        if n_params == 4:
-            profile, env, alg, stps = params
-            res = run.train_new(profile, env, alg, int(stps))
-            return res
-        elif n_params == 5:
-            profile, env, alg, stps, model = params
-            res = run.train_loaded(profile, env, alg, int(stps), model)
-        elif '--from_distillate' in params:
-            params.remove('--from_distillate')
-            profile, env, alg, stps, model = params
-            #res = run.train_from_distillate(profile, env, alg, int(stps), model)
-        else:
-            raise ValueError('Incorrect amount of parameters given for {} command.'.format(command))
+        import train
+        profile, dataset, model_to, args_file = params[:4]
+        env, alg, _, _, _ = dataset.split('_')
+        train.train(profile, dataset, model_to, args_file)
 
     #- WEB -#
     elif command == 'web':

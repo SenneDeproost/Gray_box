@@ -33,8 +33,6 @@ def distillation(profile, model_from, model_to, env, alg, distill_steps, epochs)
 
 
 
-
-
 def record_experiences(profile, env_name, alg, steps, model_name):
     from stable_baselines3.common.atari_wrappers import AtariWrapper
     from baselines.common.retro_wrappers import WarpFrame

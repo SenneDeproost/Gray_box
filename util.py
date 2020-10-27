@@ -1,16 +1,16 @@
-import arrow
 import json
-import time
 import os
-import cv2
-import numpy as np
-import gym
-from baselines.common.retro_wrappers import WarpFrame
-from stable_baselines3.common.monitor import Monitor
-from stable_baselines3.common.atari_wrappers import MaxAndSkipEnv
 
+import arrow
+import cv2
+import gym
+import numpy as np
+from baselines.common.retro_wrappers import WarpFrame
+from stable_baselines3.common.atari_wrappers import MaxAndSkipEnv
+from stable_baselines3.common.monitor import Monitor
 
 LOGFILE = None
+
 
 # Print the output in stdout + log in log file.
 def log(text):
@@ -18,10 +18,12 @@ def log(text):
     timestamp = arrow.get().format('DD-MMM-YYYY HH:mm:ss')
     if LOGFILE:
         with open(LOGFILE, 'a') as f:
-            f.write(timestamp + ' - ' + text.replace('\n',''))
+            f.write(timestamp + ' - ' + text.replace('\n', ''))
             f.write("\n")
-   # else:
-        #raise FileNotFoundError('LOGFILE variable not assigned.')
+
+
+# else:
+# raise FileNotFoundError('LOGFILE variable not assigned.')
 
 
 # Load profile info file into memory.
@@ -54,7 +56,7 @@ def new_model_name(profile, env, alg, stps):
 
 # Generate name for new dataset.
 def new_dataset_name(profile, model, amount):
-    #version = round((len([i.name for i in os.scandir("profiles/{}/datasets/".format(profile))]) - 0.1) / 2) # Some magic to make versions work
+    # version = round((len([i.name for i in os.scandir("profiles/{}/datasets/".format(profile))]) - 0.1) / 2) # Some magic to make versions work
     name = '{}_{}'.format(model, amount)
     return name
 
@@ -75,24 +77,31 @@ def init_info(profile):
 
 
 # Preprocess the observation
-    # Grayscale preprocess
+# Grayscale preprocess
 def preprocess_obs(observation, thrshld):
-    #observation = cv2.cvtColor(observation, cv2.COLOR_GRAY2BGR)
-    #observation = cv2.cvtColor(observation, cv2.COLOR_BGR2GRAY)
+    # observation = cv2.cvtColor(observation, cv2.COLOR_GRAY2BGR)
+    # observation = cv2.cvtColor(observation, cv2.COLOR_BGR2GRAY)
+
     observation, th1 = cv2.threshold(observation, thrshld, 255, cv2.THRESH_BINARY)
-    #res = [1 if x == 255 else x for x in th1]
-    res = np.where(th1==255, 1, th1)
-    #plt.imshow(th1, cmap='gray')
-    #plt.show()
-    #exit()
+    res = np.where(th1 == 255, 1, th1)
+
+    # plt.imshow(th1, cmap='gray')
+    # plt.show()
+    # exit()
+
+    # res = observation / 255
+
     return res
 
+
 # Wrapper for the Gym Atari environments
-from stable_baselines3.common.vec_env.vec_transpose import VecTransposeImage
+
+
 class ThresholdWarpWrapper(gym.Wrapper):
     def __init__(self, env, threshold, width, height):
         env.reward_range = None
-        gym.Wrapper.__init__(self,MaxAndSkipEnv(Monitor(WarpFrame(env, height=height, width=width, grayscale=True)), skip=4))
+        gym.Wrapper.__init__(self,
+                             MaxAndSkipEnv(Monitor(WarpFrame(env, height=height, width=width, grayscale=True)), skip=4))
         self.threshold = threshold
         self.width = width
         self.height = height
@@ -105,4 +114,3 @@ class ThresholdWarpWrapper(gym.Wrapper):
 
     def reset(self):
         return self.env.reset()
-
